@@ -1,0 +1,18 @@
+@media(max-width:768px){
+  .app-main{padding:16px 12px 90px;}
+  .form-row{flex-direction:column;}
+  .detalle-actions{flex-direction:column;}
+  .detalle-actions .btn{width:100%;justify-content:center;}
+}
+@media(max-width:480px){
+  .modal-overlay{padding:0;align-items:flex-end;}
+  .modal{border-radius:20px 20px 0 0;max-height:95vh;}
+  .fab{bottom:20px;right:20px;width:50px;height:50px;font-size:24px;}
+  .pomodoro-ring{width:120px;height:120px;}
+  .pomodoro-time{font-size:24px;}
+}
+@media(min-width:1024px){
+  .app-main{max-width:720px;}
+  .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .dashboard-grid .card:first-child{grid-column:1/-1;}
+}
