@@ -14,6 +14,16 @@ class HomeView {
     this.$cargaBadge  = document.getElementById('carga-badge');
     this.$filterRow   = document.getElementById('filter-row');
     this.$taskList    = document.getElementById('task-list');
+    this.$specialSelect = document.getElementById('special-filter');
+    this.$statTotal   = document.getElementById('stat-total');
+    this.$statUrgent  = document.getElementById('stat-urgent');
+    this.$statDone    = document.getElementById('stat-done');
+
+    if (this.$specialSelect) {
+      this.$specialSelect.addEventListener('change', () => {
+        this._vm.setFiltro(this.$specialSelect.value);
+      });
+    }
   }
 
   // ── Barra de carga semanal ────────────────────────────────────────────────
@@ -54,27 +64,51 @@ class HomeView {
 
   // ── Chips de filtro por materia ───────────────────────────────────────────
 
+  static CATEGORY_ICONS = {
+    'Trabajo': '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 7V5.5C7 4.67157 7.67157 4 8.5 4H11.5C12.3284 4 13 4.67157 13 5.5V7" stroke="currentColor" stroke-width="1.6"/><path d="M3 11H17" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'Estudio': '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4.5C4 3.67157 4.67157 3 5.5 3H10V17H5.5C4.67157 17 4 16.3284 4 15.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 4.5C16 3.67157 15.3284 3 14.5 3H10V17H14.5C15.3284 17 16 16.3284 16 15.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'Personal': '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="6.5" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 17C3.5 13.9624 6.46243 11.5 10 11.5C13.5376 11.5 16.5 13.9624 16.5 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'Bienestar': '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 17S3 12.5 3 7.8C3 5.7 4.7 4 6.8 4C8 4 9.2 4.6 10 5.6C10.8 4.6 12 4 13.2 4C15.3 4 17 5.7 17 7.8C17 12.5 10 17 10 17Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'Recados': '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7H15L14.3 16.5C14.25 17.15 13.7 17.65 13.05 17.65H6.95C6.3 17.65 5.75 17.15 5.7 16.5L5 7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.5 7V5.5C7.5 4.11929 8.61929 3 10 3C11.3807 3 12.5 4.11929 12.5 5.5V7" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'Planificación': '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4.5" width="14" height="12" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M3 8H17" stroke="currentColor" stroke-width="1.6"/><path d="M7 3V5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M13 3V5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'Otros': '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="10" r="1.6" fill="currentColor"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="10" r="1.6" fill="currentColor"/></svg>',
+  };
+
+  static ICON_TODAS = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/></svg>';
+
   renderFiltros() {
-    const materias = this._vm.getMaterias();
-    const activo   = this._vm.getFiltroActivo();
+    const activo = this._vm.getFiltroActivo();
+    const cats = this._vm.getGeneralCategories();
 
-    this.$filterRow.innerHTML = `
-      <button class="chip ${activo === 'todas' ? 'chip--active' : ''}" data-filter="todas">
-        Todas
-      </button>
-      ${materias.map(m => `
-        <button class="chip ${activo === String(m.id) ? 'chip--active' : ''}"
-                data-filter="${m.id}"
-                style="${activo === String(m.id) ? `background:${m.color};border-color:${m.color}` : `border-color:${m.color};color:${m.color}`}">
-          <span class="chip-dot" style="background:${m.color}"></span>
-          ${m.nombre}
-        </button>`).join('')}
-    `;
+    // Renderizar chips/botones de categorías en español
+    this.$filterRow.innerHTML = '';
+    const todasBtn = document.createElement('button');
+    todasBtn.className = `chip ${activo === 'todas' ? 'chip--active' : ''}`;
+    todasBtn.dataset.filter = 'todas';
+    todasBtn.innerHTML = `<span class="chip-icon">${HomeView.ICON_TODAS}</span>Todas`;
+    this.$filterRow.appendChild(todasBtn);
 
-    // Eventos de los chips
+    cats.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = `chip ${activo === 'general:' + c.key ? 'chip--active' : ''}`;
+      btn.dataset.filter = 'general:' + c.key;
+      btn.style.borderColor = this._vm.getCategoryColor(c.key);
+      btn.style.color = this._vm.getCategoryColor(c.key);
+      const icon = HomeView.CATEGORY_ICONS[c.key] || HomeView.ICON_TODAS;
+      btn.innerHTML = `<span class="chip-icon">${icon}</span>${c.label}`;
+      this.$filterRow.appendChild(btn);
+    });
+
     this.$filterRow.querySelectorAll('.chip').forEach(chip => {
       chip.addEventListener('click', () => {
         this._vm.setFiltro(chip.dataset.filter);
+        if (this.$specialSelect) this.$specialSelect.value = 'todas';
+
+        // Además de filtrar, abrir el formulario de nueva tarea con la categoría precargada
+        if (chip.dataset.filter !== 'todas' && window.app && window.app.modalView) {
+          const categoryKey = chip.dataset.filter.replace('general:', '');
+          window.app.modalView.abrirNueva({ general_categoria: categoryKey });
+        }
       });
     });
   }
@@ -87,7 +121,7 @@ class HomeView {
     if (!tareas.length) {
       this.$taskList.innerHTML = `
         <div class="empty-state">
-          <span class="empty-state__icon">📋</span>
+          <img src="assets/img/empty-state.jpg" alt="Sin tareas pendientes" class="empty-state__photo" />
           <p class="empty-state__text">No hay tareas. ¡Toca + para agregar una!</p>
         </div>`;
       return;
@@ -125,6 +159,9 @@ class HomeView {
 
   _renderCard(tarea) {
     const materia  = this._vm.getMateriaById(tarea.materia_id);
+    const categoryKey = this._vm.getGeneralCategory(tarea);
+    const categoryLabel = this._vm.getCategoryLabel(categoryKey);
+    const catColor = this._vm.getCategoryColor(categoryKey);
     const { texto: fechaTxt, clase: fechaCls } = this._vm.etiquetaFecha(tarea.fecha_limite);
     const urgencia = this._vm.calcularUrgencia(tarea.fecha_limite);
     const prioColor = { Alta: 'task-card--alta', Media: 'task-card--media', Baja: 'task-card--baja' };
@@ -133,15 +170,15 @@ class HomeView {
 
     return `
       <div class="task-card ${prioColor[tarea.prioridad] || ''} ${done}"
-           data-id="${tarea.id}">
+           data-id="${tarea.id}" style="border-left:4px solid ${catColor}">
         <div class="task-card__top">
           <span class="task-card__title">${tarea.titulo}</span>
           <span class="task-card__vence ${fechaCls}">⏰ ${fechaTxt}</span>
         </div>
         <div class="task-card__meta">
-          <span class="materia-pill" style="background:${materia.bg};color:${materia.color}">
-            <span class="materia-pill__dot" style="background:${materia.color}"></span>
-            ${materia.nombre}
+            <span class="materia-pill" style="background:${catColor};color:#fff">
+            <span class="materia-pill__dot" style="background:rgba(255,255,255,0.2)"></span>
+            ${categoryLabel}
           </span>
           <span class="badge ${tarea.prioridad === 'Alta' ? 'badge--danger' : tarea.prioridad === 'Media' ? 'badge--warning' : 'badge--success'}">
             ${tarea.prioridad}
@@ -150,6 +187,10 @@ class HomeView {
         <div class="urgency-bar">
           <div class="urgency-bar__fill ${urgClass[tarea.prioridad] || ''}"
                style="width:${urgencia}%"></div>
+        </div>
+        <div class="task-timer" data-id="${tarea.id}">
+          <i class="clock-icon">🕒</i>
+          <span class="timer-countdown">Calculando...</span>
         </div>
         <div class="task-card__footer">
           <span class="task-card__pomodoro">
@@ -163,8 +204,23 @@ class HomeView {
   // ── Render completo de la vista home ──────────────────────────────────────
 
   render() {
+    this._renderHeaderStats();
     this.renderWeeklyBar();
     this.renderFiltros();
+    if (this.$specialSelect) {
+      this.$specialSelect.value = this._vm.getFiltroActivo().startsWith('especial:') ? this._vm.getFiltroActivo() : 'todas';
+    }
     this.renderTareas();
+  }
+
+  _renderHeaderStats() {
+    const tareas = this._vm.getTareas();
+    const total   = tareas.length;
+    const urgent  = tareas.filter(t => t.prioridad === 'Alta' && !t.completada).length;
+    const done    = tareas.filter(t => t.completada).length;
+
+    if (this.$statTotal) this.$statTotal.textContent = total;
+    if (this.$statUrgent) this.$statUrgent.textContent = urgent;
+    if (this.$statDone) this.$statDone.textContent = done;
   }
 }

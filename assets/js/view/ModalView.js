@@ -15,15 +15,18 @@ class ModalView {
     this.$id       = document.getElementById('tarea-id');
     this.$titulo   = document.getElementById('tarea-titulo');
     this.$desc     = document.getElementById('tarea-descripcion');
-    this.$materia  = document.getElementById('tarea-materia');
-    this.$prioridad= document.getElementById('tarea-prioridad');
-    this.$fecha    = document.getElementById('tarea-fecha');
-    this.$pomodoros= document.getElementById('tarea-pomodoros');
-    this.$recCheck = document.getElementById('tarea-recordatorio');
-    this.$recOpts  = document.getElementById('recordatorio-opts');
-    this.$anticip  = document.getElementById('tarea-anticipacion');
-    this.$errTit   = document.getElementById('error-titulo');
-    this.$errFecha = document.getElementById('error-fecha');
+    this.$materia        = document.getElementById('tarea-materia');
+    this.$categoriaGeneral = null; // will be created in DOM if exists
+    this.$prioridadInput = document.getElementById('tarea-prioridad');
+    this.$priorityBtns   = [...document.querySelectorAll('.priority-btn')];
+    this.$fecha          = document.getElementById('tarea-fecha');
+    this.$pomodoros      = document.getElementById('tarea-pomodoros');
+    this.$pomodoroCount  = document.getElementById('pomodoro-count');
+    this.$recCheck       = document.getElementById('tarea-recordatorio');
+    this.$recOpts        = document.getElementById('recordatorio-opts');
+    this.$anticip        = document.getElementById('tarea-anticipacion');
+    this.$errTit         = document.getElementById('error-titulo');
+    this.$errFecha       = document.getElementById('error-fecha');
 
     // Modal detalle
     this.$detalleOverlay = document.getElementById('modal-detalle-overlay');
@@ -32,6 +35,9 @@ class ModalView {
     this.$detalleDesc    = document.getElementById('detalle-desc');
     this.$detalleFecha   = document.getElementById('detalle-fecha');
     this.$detallePrio    = document.getElementById('detalle-prioridad');
+    this.$detalleSubtitle= document.getElementById('detalle-subtitle');
+    this.$detalleRecordatorio = document.getElementById('detalle-recordatorio');
+    this.$detalleProgreso = document.getElementById('detalle-progreso');
     this.$btnCompletar   = document.getElementById('btn-completar');
     this.$btnEditar      = document.getElementById('btn-editar-tarea');
     this.$btnEliminar    = document.getElementById('btn-eliminar-tarea');
@@ -45,8 +51,19 @@ class ModalView {
   _populateMaterias() {
     const materias = this._vm.getMaterias();
     this.$materia.innerHTML = materias.map(m =>
-      `<option value="${m.id}">${m.nombre}</option>`
+      `<option value="${m.id}">${this._vm.getDisplayMateriaName(m)}</option>`
     ).join('');
+
+    // Añadir select de categoría general si existe en el DOM
+    const gen = document.getElementById('tarea-general-categoria');
+    if (gen) {
+      this.$categoriaGeneral = gen;
+      gen.innerHTML = '';
+      gen.appendChild(new Option('Seleccionar categoría', ''));
+      this._vm.getGeneralCategories().forEach(c => {
+        gen.appendChild(new Option(c.label, c.key));
+      });
+    }
   }
 
   // ── Eventos ───────────────────────────────────────────────────────────────
@@ -61,6 +78,20 @@ class ModalView {
     this.$overlay.addEventListener('click',        e => { if (e.target === this.$overlay)        this.cerrar(); });
     this.$detalleOverlay.addEventListener('click', e => { if (e.target === this.$detalleOverlay) this.cerrarDetalle(); });
 
+    // Selección de prioridad
+    this.$priorityBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.$priorityBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.$prioridadInput.value = btn.dataset.priority;
+      });
+    });
+
+    // Actualizar contador de pomodoros
+    this.$pomodoros.addEventListener('input', () => {
+      this.$pomodoroCount.textContent = this.$pomodoros.value;
+    });
+
     // Toggle recordatorio
     this.$recCheck.addEventListener('change', () => {
       this.$recOpts.style.display = this.$recCheck.checked ? 'block' : 'none';
@@ -71,32 +102,67 @@ class ModalView {
       e.preventDefault();
       if (!this._validar()) return;
 
-      const datos = {
-        titulo:           this.$titulo.value.trim(),
-        descripcion:      this.$desc.value.trim(),
-        materia_id:       Number(this.$materia.value),
-        prioridad:        this.$prioridad.value,
-        fecha_limite:     this.$fecha.value,
-        pomodoros_est:    Number(this.$pomodoros.value) || 1,
-        min_anticipacion: this.$recCheck.checked ? Number(this.$anticip.value) : 0,
-        completada:       0,
-        pomodoros_real:   0,
-      };
+      const submitBtn = this.$form.querySelector('[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
 
-      const id = this.$id.value;
-      let resultado;
+      try {
+        const datos = {
+          titulo:           this.$titulo.value.trim(),
+          descripcion:      this.$desc.value.trim(),
+          materia_id:       Number(this.$materia.value),
+          general_categoria: this.$categoriaGeneral ? this.$categoriaGeneral.value : '',
+          prioridad:        this.$prioridadInput.value,
+          fecha_limite:     this.$fecha.value,
+          pomodoros_est:    Number(this.$pomodoros.value) || 1,
+          min_anticipacion: this.$recCheck.checked ? Number(this.$anticip.value) : 0,
+        };
 
-      if (id) {
-        resultado = await this._vm.actualizarTarea(Number(id), datos);
-      } else {
-        resultado = await this._vm.crearTarea(datos);
-      }
+        const id = this.$id.value;
+        if (id) {
+          const tareaActual = this._vm.getTareas().find(t => t.id === Number(id));
+          datos.completada     = tareaActual ? tareaActual.completada : 0;
+          datos.pomodoros_real = tareaActual ? tareaActual.pomodoros_real : 0;
+        } else {
+          datos.completada     = 0;
+          datos.pomodoros_real = 0;
+        }
 
-      if (resultado.success) {
-        this.cerrar();
-        app.showToast(id ? 'Tarea actualizada ✓' : 'Tarea creada ✓', 'success');
-      } else {
-        app.showToast(resultado.error || 'Error al guardar', 'error');
+        let resultado;
+        if (id) {
+          resultado = await this._vm.actualizarTarea(Number(id), datos);
+        } else {
+          resultado = await this._vm.crearTarea(datos);
+        }
+
+        if (resultado.success) {
+          // Enviar notificación por email si el usuario está logueado y solicitó aviso
+          try {
+            const user = localStorage.getItem('tm_user') ? JSON.parse(localStorage.getItem('tm_user')) : null;
+            if (user && user.email) {
+              await fetch('api/notify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  email: user.email,
+                  prioridad: datos.prioridad,
+                  asunto: `${datos.prioridad} — ${datos.titulo}`,
+                  mensaje: datos.descripcion || 'Tienes una tarea registrada.'
+                })
+              });
+            }
+          } catch (e) {
+            console.warn('Error enviando notificación', e);
+          }
+          this.cerrar();
+          app.showToast(id ? 'Tarea actualizada con éxito' : 'Tarea guardada con éxito', 'success');
+        } else {
+          app.showToast(resultado.error || 'Error al guardar', 'error');
+        }
+      } catch (err) {
+        console.error('Error guardando tarea:', err);
+        app.showToast('Error al guardar: ' + err.message, 'error');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
     });
 
@@ -146,16 +212,38 @@ class ModalView {
 
   // ── Abrir modal nueva tarea ───────────────────────────────────────────────
 
-  abrirNueva() {
+  abrirNueva(defaults = {}) {
     this.$title.textContent = 'Nueva Tarea';
     this.$form.reset();
     this.$id.value = '';
+    this.$prioridadInput.value = 'Media';
+    this.$priorityBtns.forEach(b => b.classList.toggle('active', b.dataset.priority === 'Media'));
+    this.$pomodoroCount.textContent = this.$pomodoros.value;
+    this.$recCheck.checked = true;
+    this.$anticip.value = '30';
     this.$recOpts.style.display = 'block';
     // Fecha mínima = ahora
     const ahora = new Date();
     ahora.setMinutes(ahora.getMinutes() - ahora.getTimezoneOffset());
     this.$fecha.min = ahora.toISOString().slice(0,16);
     this.$overlay.classList.add('open');
+    // Aplicar defaults si vienen
+    if (defaults) {
+      if (defaults.titulo) this.$titulo.value = defaults.titulo;
+      if (defaults.descripcion) this.$desc.value = defaults.descripcion;
+      if (defaults.materia_id) this.$materia.value = defaults.materia_id;
+      if (defaults.general_categoria && this.$categoriaGeneral) this.$categoriaGeneral.value = defaults.general_categoria;
+      if (defaults.prioridad) {
+        this.$prioridadInput.value = defaults.prioridad;
+        this.$priorityBtns.forEach(b => b.classList.toggle('active', b.dataset.priority === defaults.prioridad));
+      }
+      if (defaults.fecha_limite) {
+        const f = new Date(defaults.fecha_limite);
+        f.setMinutes(f.getMinutes() - f.getTimezoneOffset());
+        this.$fecha.value = f.toISOString().slice(0,16);
+      }
+      if (defaults.pomodoros_est) { this.$pomodoros.value = defaults.pomodoros_est; this.$pomodoroCount.textContent = defaults.pomodoros_est; }
+    }
   }
 
   // ── Abrir modal editar tarea ──────────────────────────────────────────────
@@ -166,14 +254,21 @@ class ModalView {
     this.$titulo.value        = tarea.titulo;
     this.$desc.value          = tarea.descripcion || '';
     this.$materia.value       = tarea.materia_id;
-    this.$prioridad.value     = tarea.prioridad;
+    this.$prioridadInput.value= tarea.prioridad;
+    this.$priorityBtns.forEach(b => b.classList.toggle('active', b.dataset.priority === tarea.prioridad));
     this.$pomodoros.value     = tarea.pomodoros_est || 1;
+    this.$pomodoroCount.textContent = this.$pomodoros.value;
+    this.$recCheck.checked    = tarea.min_anticipacion > 0;
+    this.$anticip.value       = tarea.min_anticipacion ? String(tarea.min_anticipacion) : '30';
+    this.$recOpts.style.display = this.$recCheck.checked ? 'block' : 'none';
+    if (this.$categoriaGeneral) {
+      this.$categoriaGeneral.value = tarea.general_categoria || '';
+    }
     if (tarea.fecha_limite) {
       const f = new Date(tarea.fecha_limite);
       f.setMinutes(f.getMinutes() - f.getTimezoneOffset());
       this.$fecha.value = f.toISOString().slice(0,16);
     }
-    this.$recOpts.style.display = 'block';
     this.$overlay.classList.add('open');
   }
 
@@ -182,14 +277,21 @@ class ModalView {
   abrirDetalle(tarea) {
     const materia = this._vm.getMateriaById(tarea.materia_id);
     const { texto } = this._vm.etiquetaFecha(tarea.fecha_limite);
+    const category = this._vm.getGeneralCategory(tarea);
+    const color = this._vm.getCategoryColor(category);
 
-    this.$detalleMateria.textContent   = materia.nombre;
-    this.$detalleMateria.style.background = materia.bg;
-    this.$detalleMateria.style.color      = materia.color;
+    this.$detalleMateria.textContent   = category;
+    this.$detalleMateria.style.background = color;
+    this.$detalleMateria.style.color      = '#fff';
     this.$detalleTitulo.textContent    = tarea.titulo;
     this.$detalleDesc.textContent      = tarea.descripcion || 'Sin descripción.';
     this.$detalleFecha.textContent     = `📅 ${texto}`;
     this.$detallePrio.textContent      = `Prioridad: ${tarea.prioridad}`;
+    this.$detalleSubtitle.textContent  = `${category} • ${tarea.pomodoros_est || 1} sesiones estimadas`;
+    this.$detalleRecordatorio.textContent = tarea.min_anticipacion > 0
+      ? `Sí, ${tarea.min_anticipacion} min antes`
+      : 'No programado';
+    this.$detalleProgreso.textContent = `${tarea.pomodoros_real || 0}/${tarea.pomodoros_est || 1}`;
 
     // Actualizar texto del botón según estado
     this.$btnCompletar.textContent = tarea.completada ? '↩ Marcar pendiente' : '✓ Completar';

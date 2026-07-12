@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskMaster — Integraciones</title>
+  <link rel="stylesheet" href="css/integraciones.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-title">TaskMaster</span>
+      <span class="brand-sub">Integraciones</span>
+    </div>
+    <span class="badge-fase">Fase 1 + 2</span>
+  </header>
+
+  <main class="wrap">
+    <p class="intro">
+      Módulo aislado de integraciones externas. No modifica la app principal —
+      lee tus tareas reales desde <code>localhost:3000</code>.
+    </p>
+
+    <div class="status" id="status-conexion">Conectando con la app principal…</div>
+
+    <section class="cuentas">
+      <div class="cuenta">
+        <img src="assets/icons/googlecalendar.svg" alt="" width="20" height="20" />
+        <span>Google (Calendar, Drive, Classroom)</span>
+        <span class="cuenta__estado" id="estado-google">verificando…</span>
+        <a class="btn btn--small" href="/auth/google" id="btn-conectar-google">Conectar</a>
+      </div>
+      <div class="cuenta">
+        <img src="assets/icons/generico.svg" alt="" width="20" height="20" />
+        <span>Microsoft (OneDrive, Teams)</span>
+        <span class="cuenta__estado" id="estado-microsoft">verificando…</span>
+        <a class="btn btn--small" href="/auth/microsoft" id="btn-conectar-microsoft">Conectar</a>
+      </div>
+    </section>
+
+    <section class="grid">
+
+      <!-- Brevo: recordatorios por email -->
+      <article class="card">
+        <div class="card__head">
+          <img src="assets/icons/brevo.svg" alt="Brevo" width="32" height="32" />
+          <div>
+            <h2>Recordatorio por email</h2>
+            <p class="card__desc">Envía un recordatorio de una tarea a cualquier correo, vía Brevo.</p>
+          </div>
+        </div>
+        <label class="field">
+          <span>Tarea</span>
+          <select id="select-tarea-email"></select>
+        </label>
+        <label class="field">
+          <span>Enviar a</span>
+          <input type="email" id="input-email" placeholder="correo@ejemplo.com" />
+        </label>
+        <button class="btn btn--primary" id="btn-enviar-email">
+          <img src="assets/icons/gmail.svg" alt="" width="18" height="18" /> Enviar recordatorio
+        </button>
+        <p class="card__result" id="resultado-email"></p>
+      </article>
+
+      <!-- Exportar .ics -->
+      <article class="card">
+        <div class="card__head">
+          <img src="assets/icons/googlecalendar.svg" alt="Calendario" width="32" height="32" />
+          <div>
+            <h2>Exportar a calendario</h2>
+            <p class="card__desc">Descarga un archivo .ics compatible con Google Calendar, Outlook, Apple Calendar, etc.</p>
+          </div>
+        </div>
+        <label class="field">
+          <span>Tarea</span>
+          <select id="select-tarea-ics">
+            <option value="">Todas las tareas</option>
+          </select>
+        </label>
+        <button class="btn btn--primary" id="btn-exportar-ics">Exportar .ics</button>
+        <p class="card__result" id="resultado-ics"></p>
+      </article>
+
+      <!-- Google Calendar (evento real) -->
+      <article class="card" data-requiere="google">
+        <div class="card__head">
+          <img src="assets/icons/googlecalendar.svg" alt="Google Calendar" width="32" height="32" />
+          <div>
+            <h2>Crear evento en Google Calendar</h2>
+            <p class="card__desc">Crea el evento directamente en tu calendario real.</p>
+          </div>
+        </div>
+        <label class="field">
+          <span>Tarea</span>
+          <select id="select-tarea-calendar"></select>
+        </label>
+        <button class="btn btn--primary" id="btn-crear-evento">Crear evento</button>
+        <p class="card__result" id="resultado-calendar"></p>
+      </article>
+
+      <!-- Google Drive -->
+      <article class="card" data-requiere="google">
+        <div class="card__head">
+          <img src="assets/icons/googledrive.svg" alt="Google Drive" width="32" height="32" />
+          <div>
+            <h2>Vincular archivo de Drive</h2>
+            <p class="card__desc">Pega el link de un archivo de tu Google Drive para adjuntarlo a una tarea.</p>
+          </div>
+        </div>
+        <label class="field">
+          <span>Tarea</span>
+          <select id="select-tarea-drive"></select>
+        </label>
+        <label class="field">
+          <span>Link de Drive</span>
+          <input type="url" id="input-drive-url" placeholder="https://drive.google.com/file/d/..." />
+        </label>
+        <button class="btn btn--primary" id="btn-vincular-drive">Vincular archivo</button>
+        <p class="card__result" id="resultado-drive"></p>
+      </article>
+
+      <!-- Google Classroom -->
+      <article class="card" data-requiere="google">
+        <div class="card__head">
+          <img src="assets/icons/googleclassroom.svg" alt="Google Classroom" width="32" height="32" />
+          <div>
+            <h2>Importar de Classroom</h2>
+            <p class="card__desc">Trae tareas de un curso de Classroom a TaskMaster.</p>
+          </div>
+        </div>
+        <label class="field">
+          <span>Curso</span>
+          <select id="select-curso-classroom"></select>
+        </label>
+        <button class="btn btn--primary" id="btn-cargar-classroom">Ver tareas del curso</button>
+        <div id="lista-classroom"></div>
+        <p class="card__result" id="resultado-classroom"></p>
+      </article>
+
+      <!-- OneDrive -->
+      <article class="card" data-requiere="microsoft">
+        <div class="card__head">
+          <img src="assets/icons/generico.svg" alt="OneDrive" width="32" height="32" />
+          <div>
+            <h2>Vincular archivo de OneDrive</h2>
+            <p class="card__desc">Pega el link de un archivo de tu OneDrive para adjuntarlo a una tarea.</p>
+          </div>
+        </div>
+        <label class="field">
+          <span>Tarea</span>
+          <select id="select-tarea-onedrive"></select>
+        </label>
+        <label class="field">
+          <span>Link de OneDrive</span>
+          <input type="url" id="input-onedrive-url" placeholder="https://onedrive.live.com/..." />
+        </label>
+        <button class="btn btn--primary" id="btn-vincular-onedrive">Vincular archivo</button>
+        <p class="card__result" id="resultado-onedrive"></p>
+      </article>
+
+      <!-- Microsoft Teams -->
+      <article class="card">
+        <div class="card__head">
+          <img src="assets/icons/generico.svg" alt="Microsoft Teams" width="32" height="32" />
+          <div>
+            <h2>Compartir en Microsoft Teams</h2>
+            <p class="card__desc">Envía la tarea como mensaje a un canal de tu equipo.</p>
+          </div>
+        </div>
+        <p class="card__aviso">⚠️ Código listo, pero requiere una cuenta con licencia de Microsoft Teams — no disponible actualmente (ni la cuenta personal ni la institucional la tienen habilitada). Se activará solo cuando conectes una cuenta con Teams.</p>
+        <label class="field">
+          <span>Tarea</span>
+          <select id="select-tarea-teams"></select>
+        </label>
+        <label class="field">
+          <span>Equipo</span>
+          <select id="select-equipo-teams"></select>
+        </label>
+        <label class="field">
+          <span>Canal</span>
+          <select id="select-canal-teams"></select>
+        </label>
+        <button class="btn btn--primary" id="btn-enviar-teams" disabled>Enviar a Teams</button>
+        <p class="card__result" id="resultado-teams"></p>
+      </article>
+
+    </section>
+  </main>
+
+  <script src="js/integraciones.js"></script>
+</body>
+</html>
