@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="16 16 124 124" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TaskMaster">
+  <defs>
+    <linearGradient id="tmIconDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8B6CFF"/>
+      <stop offset="0.55" stop-color="#5B7CFA"/>
+      <stop offset="1" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="tmGlossDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="30" width="100" height="100" rx="28" fill="url(#tmIconDark)"/>
+  <rect x="24" y="30" width="100" height="100" rx="28" fill="url(#tmGlossDark)"/>
+  <path d="M48 82 L66 100 L104 56" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="120" cy="38" r="12" fill="#FBBF24" stroke="#0F172A" stroke-width="3"/>
+</svg>

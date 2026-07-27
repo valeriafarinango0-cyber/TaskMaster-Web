@@ -11,6 +11,22 @@ class TaskViewModel {
     this._model        = model;
     this._matModel     = materiaModel;
 
+    // Mapeo de nombres genéricos para mostrar categorías más universales
+    this._genericNamesPool = ['Trabajo','Estudio','Personal','Bienestar','Recados','Planificación','Creatividad','Investigación','Salud','Finanzas'];
+    this._genericMap = {}; // materia_id -> generic name
+
+    // Categorías generales para tareas (nombres en español)
+    this._generalCategories = ['Trabajo','Estudio','Personal','Bienestar','Recados','Planificación','Otros'];
+    this._categoryKeywords = {
+      'Trabajo': ['trabajo','proyecto','empresa','reunion','programaci','gestion'],
+      'Estudio': ['estudio','examen','practica','laboratorio','clase','curso','materia'],
+      'Personal': ['personal','hogar','familia','cumple','casa'],
+      'Bienestar': ['salud','meditar','gym','ejercicio','bienestar'],
+      'Recados': ['compras','recado','mandado','pagar','entregar'],
+      'Planificación': ['plan','planificacion','objetivo','roadmap','planificar'],
+      'Otros': []
+    };
+
     // Estado observable
     this._state = {
       tareas:         [],
@@ -39,12 +55,44 @@ class TaskViewModel {
   getTareas()       { return [...this._state.tareas]; }
   getTareaActiva()  { return this._state.tareaActiva; }
   getMaterias()     { return this._matModel.getAll(); }
+
+  /** Devuelve un nombre genérico para una materia (persistente por id) */
+  getDisplayMateriaName(materia) {
+    if (!materia) return '';
+    const id = materia.id;
+    if (this._genericMap[id]) return this._genericMap[id];
+    // Asignar por índice para consistencia
+    const pool = this._genericNamesPool;
+    const name = pool[(id - 1) % pool.length] || materia.nombre;
+    this._genericMap[id] = name;
+    return name;
+  }
   getFiltroActivo() { return this._state.filtroActivo; }
 
   /** Tareas filtradas según el filtro activo */
   getTareasFiltradas() {
     const { tareas, filtroActivo } = this._state;
     if (filtroActivo === 'todas') return tareas;
+    // Soporte para filtros generales: 'general:Work' etc.
+    if (String(filtroActivo).startsWith('general:')) {
+      const cat = String(filtroActivo).split(':')[1];
+      return tareas.filter(t => this.getGeneralCategory(t) === cat);
+    }
+    if (String(filtroActivo).startsWith('especial:')) {
+      const cat = String(filtroActivo).split(':')[1];
+      switch (cat) {
+        case 'urgentes':
+          return tareas.filter(t => t.prioridad === 'Alta' && !t.completada);
+        case 'tareas':
+          return tareas;
+        case 'totales':
+          return tareas;
+        case 'completadas':
+          return tareas.filter(t => t.completada);
+        default:
+          return tareas;
+      }
+    }
     return tareas.filter(t => String(t.materia_id) === String(filtroActivo));
   }
 
@@ -99,7 +147,6 @@ class TaskViewModel {
   async toggleCompletada(id) {
     await this._model.toggleCompleta(id);
     await this.cargarTareas();
-    this._notify('tareasActualizadas');
   }
 
   /** Registra un Pomodoro completado en la tarea activa */
@@ -137,20 +184,21 @@ class TaskViewModel {
   getDatosDashboard() {
     const tareas    = this._state.tareas;
     const porDia    = this._model.agruparPorDia(tareas);
-    const materias  = this._matModel.getAll();
+    const categorias = this.getGeneralCategories();
 
     // Pomodoros totales esta semana
     const pomHoy    = tareas.reduce((s, t) => s + (t.pomodoros_real || 0), 0);
 
-    // Avance por materia
-    const avanceMaterias = materias.map(m => {
-      const mTareas = tareas.filter(t => t.materia_id === m.id);
-      if (!mTareas.length) return null;
-      const hechas  = mTareas.filter(t => t.completada).length;
-      return { materia: m, pct: Math.round((hechas / mTareas.length) * 100) };
+    // Avance por categoría general
+    const avanceCategorias = categorias.map(c => {
+      const cKey = c.key;
+      const cTareas = tareas.filter(t => this.getGeneralCategory(t) === cKey);
+      if (!cTareas.length) return null;
+      const hechas = cTareas.filter(t => t.completada).length;
+      return { categoria: c, pct: Math.round((hechas / cTareas.length) * 100) };
     }).filter(Boolean);
 
-    return { porDia, pomHoy, avanceMaterias, materias };
+    return { porDia, pomHoy, avanceCategorias, categorias };
   }
 
   // ── Utilidades de presentación (cálculos sin DOM) ─────────────────────────
@@ -169,6 +217,48 @@ class TaskViewModel {
 
   getMateriaById(id) {
     return this._matModel.getById(id);
+  }
+
+  /** Devuelve las categorías generales con etiquetas en español */
+  getGeneralCategories() {
+    return this._generalCategories.map(k => ({ key: k, label: k }));
+  }
+
+  getCategoryLabel(key) {
+    const cat = this.getGeneralCategories().find(c => c.key === key);
+    return cat ? cat.label : key;
+  }
+
+  /** Determina la categoría general de una tarea (p.ej. Work, Study) */
+  getGeneralCategory(tarea) {
+    if (!tarea) return 'Otros';
+    // Si la tarea ya trae una categoría explícita, usarla
+    if (tarea.general_categoria) return tarea.general_categoria;
+
+    const materia = this.getMateriaById(tarea.materia_id) || { nombre: '' };
+    const text = ((tarea.titulo || '') + ' ' + (tarea.descripcion || '') + ' ' + (materia.nombre || '')).toLowerCase();
+
+    for (const cat of this._generalCategories) {
+      const kws = this._categoryKeywords[cat] || [];
+      for (const kw of kws) {
+        if (text.includes(kw.toLowerCase())) return cat;
+      }
+    }
+    return 'Otros';
+  }
+
+  /** Devuelve color hex para una categoría general */
+  getCategoryColor(cat) {
+    const map = {
+      'Trabajo': '#7C4DFF',
+      'Estudio': '#00B8D9',
+      'Personal': '#FFB020',
+      'Bienestar': '#4CAF50',
+      'Recados': '#FF7043',
+      'Planificación': '#2196F3',
+      'Otros': '#9E9E9E'
+    };
+    return map[cat] || '#9E9E9E';
   }
 }
 

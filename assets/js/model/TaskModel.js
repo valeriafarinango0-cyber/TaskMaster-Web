@@ -1,16 +1,15 @@
 /**
  * CAPA MODEL — TaskModel.js
- * Consumo de la API PHP con mysqli (estructura de la compañera).
- * Endpoints: api/tareas.php | api/materias.php
+ * Consumo de la API Node/Express.
+ * Endpoints: api/tareas | api/materias
  * Fallback: localStorage cuando no hay conexión.
  */
 
 class TaskModel {
 
     constructor() {
-        // Endpoints que coinciden con la estructura de la compañera
-        this.API_TAREAS   = 'api/tareas.php';
-        this.API_MATERIAS = 'api/materias.php';
+        this.API_TAREAS   = 'api/tareas';
+        this.API_MATERIAS = 'api/materias';
         this._tareas = [];
     }
 
@@ -25,12 +24,15 @@ class TaskModel {
     // ── GET: todas las tareas ─────────────────────────────────────────────────
     async getAll() {
         try {
-            const res  = await fetch(this.API_TAREAS);
+            const res  = await fetch(this.API_TAREAS, { credentials: 'include' });
             const data = await res.json();
-            if (data.success) {
+            if (res.ok && data.success) {
                 this._tareas = data.tareas;
                 this._lsSave(this._tareas); // sincronizar localStorage
                 return this._tareas;
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al obtener tareas. Usando localStorage.');
             }
         } catch (e) {
             console.warn('API no disponible — usando localStorage', e);
@@ -51,13 +53,17 @@ class TaskModel {
             const res  = await fetch(this.API_TAREAS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(tarea)
             });
             const data = await res.json();
-            if (data.success) {
+            if (res.ok && data.success) {
                 this._tareas.push(data.tarea);
                 this._lsSave(this._tareas);
                 return { success: true, tarea: data.tarea };
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al crear tarea. Usando localStorage.');
             }
             return data;
         } catch (e) {
@@ -77,13 +83,17 @@ class TaskModel {
             const res  = await fetch(this.API_TAREAS, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ id, ...cambios })
             });
             const data = await res.json();
-            if (data.success) {
+            if (res.ok && data.success) {
                 this._tareas = this._tareas.map(t => t.id === id ? { ...t, ...cambios } : t);
                 this._lsSave(this._tareas);
                 return { success: true };
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al actualizar tarea. Usando localStorage.');
             }
         } catch (e) {
             const arr = this._lsGet().map(t => t.id === id ? { ...t, ...cambios } : t);
@@ -99,13 +109,17 @@ class TaskModel {
             const res  = await fetch(this.API_TAREAS, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ id })
             });
             const data = await res.json();
-            if (data.success) {
+            if (res.ok && data.success) {
                 this._tareas = this._tareas.filter(t => t.id !== id);
                 this._lsSave(this._tareas);
                 return { success: true };
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al eliminar tarea. Usando localStorage.');
             }
         } catch (e) {
             const arr = this._lsGet().filter(t => t.id !== id);

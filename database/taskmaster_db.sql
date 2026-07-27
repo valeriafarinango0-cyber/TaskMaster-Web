@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS tareas (
     materia_id       INT          DEFAULT 6,
     prioridad        ENUM('Alta','Media','Baja') NOT NULL DEFAULT 'Media',
     fecha_limite     DATETIME     DEFAULT NULL,
+    general_categoria VARCHAR(50) DEFAULT NULL,
     completada       TINYINT(1)   NOT NULL DEFAULT 0,
     pomodoros_est    INT          NOT NULL DEFAULT 1,
     pomodoros_real   INT          NOT NULL DEFAULT 0,
