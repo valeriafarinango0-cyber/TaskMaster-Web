@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskMaster</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">✓</div>
+        <div>
+          <p class="brand-label">TaskMaster</p>
+          <span class="brand-subtitle">Organiza tu vida. Maximiza tu tiempo.</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn--ghost btn--small" id="btn-account">Invitado</button>
+        <button class="btn btn--primary" id="btn-nueva-tarea">+ Nueva tarea</button>
+      </div>
+    </div>
+    <div class="header-summary">
+      <div class="stat-card">
+        <span class="stat-label">Tareas totales</span>
+        <strong id="stat-total">0</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Urgentes</span>
+        <strong id="stat-urgent">0</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Completadas hoy</span>
+        <strong id="stat-done">0</strong>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ═══════════ PANTALLA 1 — INICIO ═══════════ -->
+    <section id="view-home" class="view active">
+      <div class="section-header">
+        <div>
+          <p class="section-label">CATEGORÍAS</p>
+          <h2>Filtra tu día</h2>
+        </div>
+      </div>
+      <div class="filter-row" id="filter-row"></div>
+
+      <div class="task-section">
+        <div class="task-list" id="task-list"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ PANTALLA 4 — VISTA SEMANAL / ESTADÍSTICAS ═══════════ -->
+    <section id="view-semana" class="view">
+      <div class="section-header">
+        <div>
+          <p class="section-label">VISIÓN SEMANAL</p>
+          <h2>Ritmo y carga</h2>
+        </div>
+        <div class="semana-nav">
+          <button class="btn btn--small btn--ghost" id="btn-semana-prev">←</button>
+          <span id="semana-rango">Esta semana</span>
+          <button class="btn btn--small btn--ghost" id="btn-semana-next">→</button>
+        </div>
+      </div>
+
+      <div class="semana-resumen" id="semana-resumen"></div>
+
+      <div class="card dashboard-card">
+        <h3>📅 Carga por día</h3>
+        <div class="bar-chart" id="bar-chart"></div>
+      </div>
+
+      <div id="semana-stats-anchor" class="dashboard-grid">
+        <div class="card dashboard-card">
+          <h3>📈 Avance por categoría</h3>
+          <div class="materia-progress" id="materia-progress"></div>
+        </div>
+        <div class="card dashboard-card">
+          <h3>🍅 Estadísticas</h3>
+          <div class="pomodoro-stats" id="pomodoro-stats"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navegación inferior -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-view="home">
+      <span class="nav-btn__icon">🏠</span><span>Inicio</span>
+    </button>
+    <button class="nav-btn" data-view="semana">
+      <span class="nav-btn__icon">📊</span><span>Semana</span>
+    </button>
+    <button class="nav-btn" data-view="semana" data-scroll="semana-stats-anchor">
+      <span class="nav-btn__icon">📈</span><span>Estadísticas</span>
+    </button>
+  </nav>
+
+  <!-- ═══════════ PANTALLA 2 — MODAL NUEVA/EDITAR TAREA ═══════════ -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal modal--form" id="modal-tarea">
+      <div class="modal__header">
+        <div>
+          <p class="modal-label">Añadir tarea</p>
+          <h2 class="modal__title" id="modal-title">Nueva Tarea</h2>
+        </div>
+        <button class="modal__close" id="btn-cerrar-modal">✕</button>
+      </div>
+      <form class="modal__form" id="form-tarea" novalidate>
+        <input type="hidden" id="tarea-id" value="" />
+
+        <div class="form-row grid-2">
+          <label class="field">
+            <span>Título</span>
+            <input type="text" id="tarea-titulo" placeholder="Ej: Finalizar propuesta" required />
+            <span class="form-error" id="error-titulo"></span>
+          </label>
+          <label class="field">
+            <span>Fecha y hora</span>
+            <input type="datetime-local" id="tarea-fecha" required />
+            <span class="form-error" id="error-fecha"></span>
+          </label>
+        </div>
+
+        <label class="field full-width">
+          <span>Descripción</span>
+          <textarea id="tarea-descripcion" rows="3" placeholder="Describe la tarea... (opcional)"></textarea>
+        </label>
+
+        <div class="form-row">
+          <label class="field">
+            <span>Categoría</span>
+            <div class="categoria-picker">
+              <span class="categoria-dot" id="categoria-dot-preview"></span>
+              <select id="tarea-categoria"></select>
+            </div>
+            <div class="categoria-nueva-form" id="categoria-nueva-form">
+              <input type="text" id="categoria-nueva-nombre" placeholder="Nombre de la categoría" />
+              <input type="color" id="categoria-nueva-color" value="#00C9FF" />
+              <button type="button" class="btn btn--small btn--primary" id="btn-crear-categoria">Crear</button>
+            </div>
+          </label>
+          <label class="field">
+            <span>Prioridad</span>
+            <div class="priority-buttons">
+              <button type="button" class="priority-btn" data-priority="Alta">Alta</button>
+              <button type="button" class="priority-btn active" data-priority="Media">Media</button>
+              <button type="button" class="priority-btn" data-priority="Baja">Baja</button>
+            </div>
+            <input type="hidden" id="tarea-prioridad" value="Media" />
+          </label>
+        </div>
+
+        <div class="form-row grid-2">
+          <label class="field">
+            <span>Pomodoros estimados</span>
+            <input type="range" id="tarea-pomodoros" min="1" max="10" value="2" />
+            <div class="range-value"><span id="pomodoro-count">2</span> sesiones</div>
+          </label>
+          <label class="field field--toggle">
+            <span>Recordatorio</span>
+            <div class="toggle-group">
+              <label class="switch">
+                <input type="checkbox" id="tarea-recordatorio" checked />
+                <span class="slider"></span>
+              </label>
+              <div id="recordatorio-opts">
+                <select id="tarea-anticipacion">
+                  <option value="15">15 min</option>
+                  <option value="30" selected>30 min</option>
+                  <option value="60">1 h</option>
+                  <option value="1440">1 d</option>
+                </select>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="modal__actions modal__actions--split">
+          <button type="button" class="btn btn--ghost" id="btn-cancelar">Cancelar</button>
+          <button type="submit" class="btn btn--primary" id="btn-guardar">Guardar tarea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════ PANTALLA 5 — DETALLE DE TAREA ═══════════ -->
+  <div class="modal-overlay" id="modal-detalle-overlay">
+    <div class="modal modal--detalle" id="modal-detalle">
+      <div class="modal__header" id="detalle-header">
+        <div>
+          <span class="detalle-materia-badge" id="detalle-materia"></span>
+          <h2 class="modal__title" id="detalle-titulo"></h2>
+        </div>
+        <button class="modal__close" id="btn-cerrar-detalle">✕</button>
+      </div>
+      <div class="detalle-body">
+        <div class="detalle-urgencia-banner" id="detalle-urgencia-banner">
+          <span id="detalle-fecha"></span>
+        </div>
+
+        <p class="detalle-desc" id="detalle-desc"></p>
+
+        <div class="detalle-meta-grid">
+          <div class="detalle-meta-card"><strong>Prioridad</strong><span id="detalle-prioridad"></span></div>
+          <div class="detalle-meta-card"><strong>Recordatorio</strong><span id="detalle-recordatorio"></span></div>
+        </div>
+
+        <div class="detalle-pomodoro-progreso">
+          <div class="detalle-pomodoro-progreso__top">
+            <strong>Progreso Pomodoro</strong>
+            <span id="detalle-progreso"></span>
+          </div>
+          <div class="mat-prog-bar"><div class="mat-prog-fill" id="detalle-progreso-fill"></div></div>
+          <span class="detalle-tiempo-real" id="detalle-tiempo-real"></span>
+        </div>
+
+        <div class="detalle-actions">
+          <button class="btn btn--pomodoro" id="btn-iniciar-enfoque">🍅 Iniciar Sesión de Enfoque</button>
+        </div>
+        <div class="detalle-actions detalle-actions--split">
+          <button class="btn btn--success" id="btn-completar">✓ Completar</button>
+          <div class="detalle-secondary-actions">
+            <button class="btn btn--ghost" id="btn-editar-tarea">✏ Editar</button>
+            <button class="btn btn--danger" id="btn-eliminar-tarea">🗑 Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PANTALLA 3 — MODO ENFOQUE POMODORO (fullscreen) ═══════════ -->
+  <div class="pomodoro-fullscreen" id="pomodoro-fullscreen">
+    <button class="pomodoro-fs-close" id="btn-pomodoro-fs-close">✕</button>
+    <p class="pomodoro-fs-subtitle" id="pomodoro-fs-tarea">Sesión de enfoque</p>
+
+    <div class="pomodoro-fs-ring">
+      <svg class="pomodoro-fs-svg" viewBox="0 0 380 380">
+        <circle class="ring-bg" cx="190" cy="190" r="170" />
+        <circle class="ring-progress" cx="190" cy="190" r="170" id="fs-ring-progress" />
+      </svg>
+      <div class="pomodoro-fs-center">
+        <span class="pomodoro-fs-time" id="fs-pomodoro-time">25:00</span>
+        <span class="pomodoro-fs-label" id="fs-pomodoro-label">Listo</span>
+      </div>
+    </div>
+
+    <div class="pomodoro-controls">
+      <button class="pom-btn" id="btn-fs-pom-reset">↺</button>
+      <button class="pom-btn pom-btn--main" id="btn-fs-pom-toggle">▶</button>
+      <button class="pom-btn" id="btn-fs-pom-skip">⏭</button>
+    </div>
+
+    <div class="pomodoro-sessions" id="fs-pomodoro-sessions"></div>
+
+    <div class="pomodoro-fs-stats">
+      <div class="fs-stat"><strong id="fs-stat-hoy">0</strong><span>Pomodoros hoy</span></div>
+      <div class="fs-stat"><strong id="fs-stat-tarea">0</strong><span>Esta tarea</span></div>
+      <div class="fs-stat"><strong id="fs-stat-total">0m</strong><span>Tiempo total</span></div>
+    </div>
+  </div>
+
+  <!-- Modal Auth (login/registro, opcional) -->
+  <div class="modal-overlay" id="modal-auth-overlay">
+    <div class="modal modal--form" id="modal-auth">
+      <div class="modal__header">
+        <div>
+          <p class="modal-label" id="auth-mode-label">Cuenta</p>
+          <h2 class="modal__title" id="auth-title">Iniciar sesión</h2>
+        </div>
+        <button class="modal__close" id="btn-cerrar-auth">✕</button>
+      </div>
+      <form class="modal__form" id="form-auth" novalidate>
+        <div class="form-row">
+          <label class="field">
+            <span>Nombre</span>
+            <input type="text" id="auth-nombre" placeholder="Tu nombre (para registro)" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" id="auth-email" placeholder="email@ejemplo.com" required />
+          </label>
+        </div>
+        <div class="form-row">
+          <label class="field">
+            <span>Contraseña</span>
+            <input type="password" id="auth-password" placeholder="Contraseña" required />
+          </label>
+        </div>
+        <div class="modal__actions modal__actions--split">
+          <button type="button" class="btn btn--ghost" id="btn-switch-auth">Cambiar a Registrar</button>
+          <button type="submit" class="btn btn--primary" id="btn-auth-submit">Continuar</button>
+        </div>
+        <div class="social-login">
+          <button type="button" class="btn btn--social" id="btn-modal-google">
+            <span class="google-icon">G</span> Iniciar sesión con Google
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <button class="fab" id="btn-fab-nueva-tarea" title="Nueva tarea">+</button>
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts en orden MVVM: Model → ViewModel → View → App -->
+  <script src="assets/js/model/TaskModel.js"></script>
+  <script src="assets/js/model/CategoriaModel.js"></script>
+  <script src="assets/js/viewmodel/TaskViewModel.js"></script>
+  <script src="assets/js/view/HomeView.js"></script>
+  <script src="assets/js/view/SemanaView.js"></script>
+  <script src="assets/js/view/ModalView.js"></script>
+  <script src="assets/js/view/PomodoroView.js"></script>
+  <script src="assets/js/view/AuthView.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
