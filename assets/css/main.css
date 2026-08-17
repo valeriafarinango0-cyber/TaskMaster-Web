@@ -1432,9 +1432,23 @@ img {
   .header-summary { grid-template-columns: 1fr; }
 }
 
+/* El header con 5 botones de acción necesita apilarse antes que el resto
+   del layout mobile, o los botones (absolutamente posicionados) se
+   superponen con la marca en anchos intermedios (tablet). */
+@media (max-width: 1100px) {
+  .header-inner { flex-direction: column; align-items: flex-start; }
+  .header-actions {
+    position: static;
+    top: auto;
+    right: auto;
+    width: 100%;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 640px) {
   .app-main { padding: 0 18px 120px; }
-  .header-inner { flex-direction: column; align-items: flex-start; }
   .brand { gap: 10px; }
   .stat-card { padding: 14px; }
   .task-card { padding: 18px; }
