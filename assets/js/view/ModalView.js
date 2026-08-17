@@ -286,7 +286,8 @@ class ModalView {
     this.$detalleTitulo.textContent    = tarea.titulo;
     this.$detalleDesc.textContent      = tarea.descripcion || 'Sin descripción.';
     this.$detalleFecha.textContent     = `📅 ${texto}`;
-    this.$detallePrio.textContent      = `Prioridad: ${tarea.prioridad}`;
+    const urgencia = this._vm.calcularUrgencia(tarea.fecha_limite);
+    this.$detallePrio.textContent      = `Prioridad: ${tarea.prioridad} · Urgencia: ${urgencia}%`;
     this.$detalleSubtitle.textContent  = `${category} • ${tarea.pomodoros_est || 1} sesiones estimadas`;
     this.$detalleRecordatorio.textContent = tarea.min_anticipacion > 0
       ? `Sí, ${tarea.min_anticipacion} min antes`

@@ -601,16 +601,33 @@ img {
 .task-card__top {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   align-items: flex-start;
   margin-bottom: 14px;
 }
 
+.task-card__status {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+
+.task-card__status svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .task-card__title {
+  flex: 1;
   font-size: 18px;
   font-weight: 700;
   line-height: 1.4;
-  max-width: calc(100% - 120px);
+}
+
+.task-card__vence {
+  flex-shrink: 0;
 }
 
 .task-card__vence {

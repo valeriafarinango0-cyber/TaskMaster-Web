@@ -163,48 +163,47 @@ class HomeView {
     }[ch]));
   }
 
+  // ── Indicador de estado (único icono por tarjeta) ─────────────────────────
+  // Verde = completada · Rojo = urgente o vencida · Gris = pendiente normal
+  static ESTADO_ICONS = {
+    completada: '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9" fill="currentColor" fill-opacity="0.16"/><path d="M6 10.5l2.5 2.5L14.5 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    alerta: '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9" fill="currentColor" fill-opacity="0.16"/><path d="M10 6v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="13.6" r="1" fill="currentColor"/></svg>',
+    pendiente: '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="7.2" stroke="currentColor" stroke-width="1.6"/></svg>',
+  };
+
+  /** Determina el estado visual único de la tarjeta: completada, alerta (urgente/vencida) o pendiente */
+  _estadoTarea(tarea) {
+    if (tarea.completada) return { clave: 'completada', color: 'var(--ok)', titulo: 'Completada' };
+    const vencida = new Date(tarea.fecha_limite) < new Date();
+    if (vencida || tarea.prioridad === 'Alta') {
+      return { clave: 'alerta', color: 'var(--urgente)', titulo: vencida ? 'Vencida' : 'Urgente' };
+    }
+    return { clave: 'pendiente', color: 'var(--muted)', titulo: 'Pendiente' };
+  }
+
   _renderCard(tarea) {
-    const materia  = this._vm.getMateriaById(tarea.materia_id);
-    const categoryKey = this._vm.getGeneralCategory(tarea);
-    const categoryLabel = this._vm.getCategoryLabel(categoryKey);
-    const catColor = this._vm.getCategoryColor(categoryKey);
+    const catColor = this._vm.getCategoryColor(this._vm.getGeneralCategory(tarea));
     const { texto: fechaTxt, clase: fechaCls } = this._vm.etiquetaFecha(tarea.fecha_limite);
-    const urgencia = this._vm.calcularUrgencia(tarea.fecha_limite);
-    const prioColor = { Alta: 'task-card--alta', Media: 'task-card--media', Baja: 'task-card--baja' };
-    const urgClass  = { Alta: 'urgency-bar__fill--alta', Media: 'urgency-bar__fill--media', Baja: 'urgency-bar__fill--baja' };
     const done = tarea.completada ? 'task-card--done' : '';
     const tituloSeguro = HomeView._escapeHtml(tarea.titulo);
+    const estado = this._estadoTarea(tarea);
 
     return `
-      <div class="task-card ${prioColor[tarea.prioridad] || ''} ${done}"
+      <div class="task-card ${done}"
            data-id="${tarea.id}" style="border-left:4px solid ${catColor}">
         <div class="task-card__top">
+          <span class="task-card__status" style="color:${estado.color}" title="${estado.titulo}">${HomeView.ESTADO_ICONS[estado.clave]}</span>
           <span class="task-card__title">${tituloSeguro}</span>
           <span class="task-card__vence ${fechaCls}">⏰ ${fechaTxt}</span>
-        </div>
-        <div class="task-card__meta">
-            <span class="materia-pill" style="background:${catColor};color:#fff">
-            <span class="materia-pill__dot" style="background:rgba(255,255,255,0.2)"></span>
-            ${categoryLabel}
-          </span>
-          <span class="badge ${tarea.prioridad === 'Alta' ? 'badge--danger' : tarea.prioridad === 'Media' ? 'badge--warning' : 'badge--success'}">
-            ${tarea.prioridad}
-          </span>
-        </div>
-        <div class="urgency-bar">
-          <div class="urgency-bar__fill ${urgClass[tarea.prioridad] || ''}"
-               style="width:${urgencia}%"></div>
         </div>
         <div class="task-timer" data-id="${tarea.id}">
           <i class="clock-icon">🕒</i>
           <span class="timer-countdown">Calculando...</span>
         </div>
+        ${!tarea.completada ? `
         <div class="task-card__footer">
-          <span class="task-card__pomodoro">
-            🍅 ${tarea.pomodoros_real || 0}/${tarea.pomodoros_est || 1} sesiones
-          </span>
-          ${!tarea.completada ? `<button class="task-play-btn" title="Iniciar enfoque">▶</button>` : '<span style="font-size:11px;color:var(--color-baja)">✓ Completada</span>'}
-        </div>
+          <button class="task-play-btn" title="Iniciar enfoque">▶</button>
+        </div>` : ''}
       </div>`;
   }
 
