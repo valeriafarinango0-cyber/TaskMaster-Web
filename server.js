@@ -25,11 +25,29 @@ const serviceAccountPath = path.resolve(
   __dirname,
   process.env.FIREBASE_SERVICE_ACCOUNT_PATH || './serviceAccountKey.json'
 );
-const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf-8'));
 
-const firebaseApp = initializeApp({
-  credential: cert(serviceAccount),
-});
+let serviceAccount;
+try {
+  serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf-8'));
+} catch (err) {
+  console.error('❌ No se pudo leer la credencial de Firebase en:', serviceAccountPath);
+  console.error('   Descarga tu clave de servicio desde Firebase Console → Configuración del proyecto → Cuentas de servicio,');
+  console.error('   guárdala en la ruta anterior (o define FIREBASE_SERVICE_ACCOUNT_PATH en un archivo .env) y vuelve a iniciar el servidor.');
+  console.error('   Detalle:', err.message);
+  process.exit(1);
+}
+
+let firebaseApp;
+try {
+  firebaseApp = initializeApp({
+    credential: cert(serviceAccount),
+  });
+} catch (err) {
+  console.error('❌ La credencial de Firebase en', serviceAccountPath, 'no es válida.');
+  console.error('   Verifica que el archivo JSON descargado de Firebase no haya sido modificado.');
+  console.error('   Detalle:', err.message);
+  process.exit(1);
+}
 
 const db = getFirestore(firebaseApp);
 

@@ -157,6 +157,12 @@ class HomeView {
 
   // ── Render de una tarjeta ─────────────────────────────────────────────────
 
+  static _escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[ch]));
+  }
+
   _renderCard(tarea) {
     const materia  = this._vm.getMateriaById(tarea.materia_id);
     const categoryKey = this._vm.getGeneralCategory(tarea);
@@ -167,12 +173,13 @@ class HomeView {
     const prioColor = { Alta: 'task-card--alta', Media: 'task-card--media', Baja: 'task-card--baja' };
     const urgClass  = { Alta: 'urgency-bar__fill--alta', Media: 'urgency-bar__fill--media', Baja: 'urgency-bar__fill--baja' };
     const done = tarea.completada ? 'task-card--done' : '';
+    const tituloSeguro = HomeView._escapeHtml(tarea.titulo);
 
     return `
       <div class="task-card ${prioColor[tarea.prioridad] || ''} ${done}"
            data-id="${tarea.id}" style="border-left:4px solid ${catColor}">
         <div class="task-card__top">
-          <span class="task-card__title">${tarea.titulo}</span>
+          <span class="task-card__title">${tituloSeguro}</span>
           <span class="task-card__vence ${fechaCls}">⏰ ${fechaTxt}</span>
         </div>
         <div class="task-card__meta">

@@ -12,8 +12,24 @@ const serviceAccountPath = path.resolve(
   '..',
   process.env.FIREBASE_SERVICE_ACCOUNT_PATH || '../serviceAccountKey.json'
 );
-const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf-8'));
 
-const app = initializeApp({ credential: cert(serviceAccount) }, 'integraciones');
+let serviceAccount;
+try {
+  serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf-8'));
+} catch (err) {
+  console.error('❌ No se pudo leer la credencial de Firebase en:', serviceAccountPath);
+  console.error('   Configura FIREBASE_SERVICE_ACCOUNT_PATH en integraciones/.env apuntando a tu clave de servicio.');
+  console.error('   Detalle:', err.message);
+  process.exit(1);
+}
+
+let app;
+try {
+  app = initializeApp({ credential: cert(serviceAccount) }, 'integraciones');
+} catch (err) {
+  console.error('❌ La credencial de Firebase en', serviceAccountPath, 'no es válida.');
+  console.error('   Detalle:', err.message);
+  process.exit(1);
+}
 
 export const db = getFirestore(app);

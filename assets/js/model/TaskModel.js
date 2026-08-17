@@ -94,12 +94,16 @@ class TaskModel {
             }
             if (res.status === 401) {
                 console.warn('No autorizado al actualizar tarea. Usando localStorage.');
+            } else {
+                console.warn('API no disponible al actualizar tarea. Usando localStorage.');
             }
         } catch (e) {
-            const arr = this._lsGet().map(t => t.id === id ? { ...t, ...cambios } : t);
-            this._lsSave(arr);
-            this._tareas = arr;
+            console.warn('API no disponible al actualizar tarea. Usando localStorage.', e);
         }
+        // Si el servidor no confirmó el cambio (error HTTP o excepción de red), aplicarlo localmente
+        const arr = this._lsGet().map(t => t.id === id ? { ...t, ...cambios } : t);
+        this._lsSave(arr);
+        this._tareas = arr;
         return { success: true };
     }
 
@@ -120,12 +124,16 @@ class TaskModel {
             }
             if (res.status === 401) {
                 console.warn('No autorizado al eliminar tarea. Usando localStorage.');
+            } else {
+                console.warn('API no disponible al eliminar tarea. Usando localStorage.');
             }
         } catch (e) {
-            const arr = this._lsGet().filter(t => t.id !== id);
-            this._lsSave(arr);
-            this._tareas = arr;
+            console.warn('API no disponible al eliminar tarea. Usando localStorage.', e);
         }
+        // Si el servidor no confirmó el borrado (error HTTP o excepción de red), aplicarlo localmente
+        const arr = this._lsGet().filter(t => t.id !== id);
+        this._lsSave(arr);
+        this._tareas = arr;
         return { success: true };
     }
 
