@@ -92,6 +92,10 @@ class ModalView {
       this.$pomodoroCount.textContent = this.$pomodoros.value;
     });
 
+    // Quick-add: interpretar lenguaje natural en el título al salir del campo
+    // (ej: "Entregar informe mañana 5pm #trabajo alta")
+    this.$titulo.addEventListener('blur', () => this._intentarQuickAdd());
+
     // Toggle recordatorio
     this.$recCheck.addEventListener('change', () => {
       this.$recOpts.style.display = this.$recCheck.checked ? 'block' : 'none';
@@ -190,6 +194,36 @@ class ModalView {
       this.cerrarDetalle();
       app.showToast('Tarea eliminada', 'info');
     });
+  }
+
+  // ── Quick-add: lenguaje natural en el título ──────────────────────────────
+
+  _intentarQuickAdd() {
+    if (typeof quickAddParser === 'undefined') return;
+    const texto = this.$titulo.value;
+    if (!texto || !texto.trim()) return;
+
+    const r = quickAddParser.parse(texto);
+    if (!r.detectados.length) return; // nada que interpretar, dejar el título tal cual
+
+    this.$titulo.value = r.titulo;
+
+    if (r.fecha) {
+      const f = new Date(r.fecha);
+      f.setMinutes(f.getMinutes() - f.getTimezoneOffset());
+      this.$fecha.value = f.toISOString().slice(0, 16);
+    }
+    if (r.prioridad) {
+      this.$prioridadInput.value = r.prioridad;
+      this.$priorityBtns.forEach(b => b.classList.toggle('active', b.dataset.priority === r.prioridad));
+    }
+    if (r.categoria && this.$categoriaGeneral) {
+      this.$categoriaGeneral.value = r.categoria;
+    }
+
+    if (app && app.showToast) {
+      app.showToast(`✨ Detecté: ${r.detectados.join(', ')} — revísalo antes de guardar`, 'info');
+    }
   }
 
   // ── Validación del formulario ─────────────────────────────────────────────
