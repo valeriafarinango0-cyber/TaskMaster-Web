@@ -195,8 +195,8 @@ class App {
 
   setUser(user) {
     this.user = user;
-    const btn = document.getElementById('btn-account');
-    if (btn) btn.textContent = user && user.nombre ? user.nombre : 'Invitado';
+    const label = document.getElementById('btn-account-label');
+    if (label) label.textContent = user && user.nombre ? user.nombre : 'Iniciar sesión';
   }
 
   // ── Notificaciones del navegador (HU-04, sin cuenta requerida) ─────────────

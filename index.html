@@ -12,19 +12,27 @@
 <body>
 
   <header class="app-header">
-    <div class="header-inner">
+    <nav class="top-nav">
       <div class="brand">
-        <div class="brand-icon">✓</div>
-        <div>
-          <p class="brand-label">TaskMaster</p>
-          <span class="brand-subtitle">Organiza tu vida. Maximiza tu tiempo.</span>
-        </div>
+        <img src="assets/img/logo.svg" class="brand-icon" alt="TaskMaster" />
+        <p class="brand-label">TaskMaster</p>
       </div>
-      <div class="header-actions">
-        <button class="btn btn--ghost btn--small" id="btn-account">Invitado</button>
-        <button class="btn btn--primary" id="btn-nueva-tarea">+ Nueva tarea</button>
+      <div class="top-nav__links">
+        <a href="#acerca-de" class="top-nav__link">Acerca de</a>
+        <a href="#contacto" class="top-nav__link">Contacto</a>
+        <button class="btn btn--ghost btn--small" id="btn-account">
+          <span class="account-icon">👤</span><span id="btn-account-label">Iniciar sesión</span>
+        </button>
       </div>
+    </nav>
+
+    <div class="hero">
+      <p class="hero__eyebrow">Gestor de tareas universal</p>
+      <h1 class="hero__title">Organiza tu vida.<br /><span class="hero__title-accent">Maximiza tu tiempo.</span></h1>
+      <p class="hero__subtitle">Trabajo, estudio, hogar o proyectos personales — crea tus propias categorías, prioriza con claridad y mantén el enfoque con sesiones Pomodoro.</p>
+      <button class="btn btn--primary btn--hero" id="btn-nueva-tarea">+ Nueva tarea</button>
     </div>
+
     <div class="header-summary">
       <div class="stat-card">
         <span class="stat-label">Tareas totales</span>
@@ -92,6 +100,22 @@
     </section>
 
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-section" id="acerca-de">
+      <h3>Acerca de TaskMaster</h3>
+      <p>TaskMaster es un gestor de tareas universal para maximizar tu productividad personal — no es exclusivo para estudiantes. Sirve para profesionales, emprendedores, el hogar o cualquier meta personal: crea tus propias categorías, prioriza con claridad y enfócate con sesiones Pomodoro.</p>
+    </div>
+    <div class="footer-section" id="contacto">
+      <h3>Contacto</h3>
+      <p>¿Preguntas, ideas o encontraste un error? Escríbenos.</p>
+      <a href="mailto:eduarhurt527@gmail.com" class="footer-link">eduarhurt527@gmail.com</a>
+      <div class="footer-social">
+        <a href="https://github.com/valeriafarinango0-cyber/TaskMaster-Web" target="_blank" rel="noopener" title="GitHub">🐙</a>
+      </div>
+    </div>
+    <p class="footer-copy">© 2026 TaskMaster — Proyecto académico.</p>
+  </footer>
 
   <!-- Navegación inferior -->
   <nav class="bottom-nav">
@@ -327,3 +351,7 @@
   <script src="assets/js/app.js"></script>
 </body>
 </html>
+<script type="module">
+  import { db } from "./assets/js/firebase-init.js";
+  console.log("Firebase conectado:", db.app.options.projectId);
+</script>
