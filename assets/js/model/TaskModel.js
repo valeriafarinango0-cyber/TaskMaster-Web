@@ -21,10 +21,22 @@ class TaskModel {
         return t.length ? Math.max(...t.map(x => x.id)) + 1 : 1;
     }
 
+    // ── Usuario en sesión (para asociar y filtrar tareas) ─────────────────────
+    _userId() {
+        try {
+            const u = JSON.parse(localStorage.getItem('tm_user') || 'null');
+            return u && u.id ? u.id : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
     // ── GET: todas las tareas ─────────────────────────────────────────────────
     async getAll() {
         try {
-            const res  = await fetch(this.API_TAREAS, { credentials: 'include' });
+            const uid = this._userId();
+            const url = uid ? `${this.API_TAREAS}?usuario_id=${uid}` : this.API_TAREAS;
+            const res  = await fetch(url, { credentials: 'include' });
             const data = await res.json();
             if (res.ok && data.success) {
                 this._tareas = data.tareas;
@@ -54,7 +66,7 @@ class TaskModel {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify(tarea)
+                body: JSON.stringify({ ...tarea, usuario_id: this._userId() })
             });
             const data = await res.json();
             if (res.ok && data.success) {
@@ -68,7 +80,7 @@ class TaskModel {
             return data;
         } catch (e) {
             // Fallback offline
-            const nueva = { ...tarea, id: this._lsNextId(), completada: 0, pomodoros_real: 0 };
+            const nueva = { ...tarea, usuario_id: this._userId(), id: this._lsNextId(), completada: 0, pomodoros_real: 0 };
             const arr = this._lsGet();
             arr.push(nueva);
             this._lsSave(arr);

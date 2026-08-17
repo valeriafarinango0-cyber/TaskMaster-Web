@@ -95,7 +95,7 @@ class AuthView {
         const user = { id: data.user.id, nombre: data.user.nombre, email };
         localStorage.setItem('tm_user', JSON.stringify(user));
         this.app.setUser(user);
-        if (window.taskViewModel) await window.taskViewModel.cargarTareas();
+        if (typeof taskViewModel !== 'undefined') await taskViewModel.cargarTareas();
         if (this.app && this.app.homeView) this.app.homeView.render();
         this.app.showToast('Conectado con Google', 'success');
         this.close();
@@ -142,7 +142,7 @@ class AuthView {
         const user = { id: data.user_id || (data.user && data.user.id) || null, nombre: nombre || (data.user && data.user.nombre) || email, email };
         localStorage.setItem('tm_user', JSON.stringify(user));
         this.app.setUser(user);
-        if (window.taskViewModel) await window.taskViewModel.cargarTareas();
+        if (typeof taskViewModel !== 'undefined') await taskViewModel.cargarTareas();
         if (this.app && this.app.homeView) this.app.homeView.render();
         this.app.showToast(this.mode === 'login' ? 'Bienvenido' : 'Cuenta creada', 'success');
         this.close();
@@ -162,9 +162,12 @@ class AuthView {
     }
   }
 
-  logout() {
+  async logout() {
     localStorage.removeItem('tm_user');
     this.app.setUser(null);
+    // Recargar tareas sin usuario para no seguir mostrando las de la sesión cerrada
+    if (typeof taskViewModel !== 'undefined') await taskViewModel.cargarTareas();
+    if (this.app && this.app.homeView) this.app.homeView.render();
     this.app.showToast('Sesión cerrada', 'info');
   }
 }

@@ -20,6 +20,7 @@ class PomodoroView {
 
     // Estado interno del timer
     this._duracion   = 25 * 60; // 25 min en segundos
+    this._duracionActual = this._duracion; // duración de la fase en curso (enfoque o descanso)
     this._restantes  = this._duracion;
     this._intervalo  = null;
     this._corriendo  = false;
@@ -84,6 +85,7 @@ class PomodoroView {
   reset() {
     clearInterval(this._intervalo);
     this._corriendo  = false;
+    this._duracionActual = this._duracion;
     this._restantes  = this._duracion;
     this.$btnToggle.textContent = '▶';
     this.$btnToggle.classList.remove('running');
@@ -106,7 +108,8 @@ class PomodoroView {
     this._notificar('🍅 ¡Sesión completada!', 'Toma un descanso de 5 minutos.');
 
     // Mostrar descanso
-    this._restantes = 5 * 60;
+    this._duracionActual = 5 * 60;
+    this._restantes = this._duracionActual;
     this.$label.textContent = '☕ Descanso';
     this.$btnToggle.textContent = '▶';
     this._actualizarUI();
@@ -122,7 +125,7 @@ class PomodoroView {
     this.$time.textContent = `${min}:${seg}`;
 
     // Anillo SVG
-    const progreso = this._restantes / this._duracion;
+    const progreso = this._restantes / this._duracionActual;
     const offset   = this._circunf * (1 - progreso);
     this.$ring.style.strokeDashoffset = offset;
 

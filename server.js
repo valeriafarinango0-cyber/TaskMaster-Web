@@ -143,6 +143,10 @@ app.get('/api/tareas', async (req, res) => {
       materiasMap[m.id] = m;
     });
 
+    // Filtrar por usuario cuando el cliente lo indica; las tareas antiguas
+    // (usuario_id null, creadas antes del soporte multiusuario) siguen visibles
+    const usuarioId = req.query.usuario_id ? Number(req.query.usuario_id) : null;
+
     const tareas = tareasSnap.docs
       .map(d => {
         const t = d.data();
@@ -153,6 +157,7 @@ app.get('/api/tareas', async (req, res) => {
           materia_color: m ? m.color : null,
         };
       })
+      .filter(t => usuarioId === null || t.usuario_id == null || t.usuario_id === usuarioId)
       .sort((a, b) => {
         if (a.completada !== b.completada) return a.completada - b.completada;
         return new Date(a.fecha_limite) - new Date(b.fecha_limite);
@@ -169,7 +174,7 @@ app.post('/api/tareas', async (req, res) => {
     const {
       titulo = '', descripcion = '', materia_id = 6,
       prioridad = 'Media', fecha_limite = '', general_categoria = '',
-      pomodoros_est = 1, min_anticipacion = 30,
+      pomodoros_est = 1, min_anticipacion = 30, usuario_id = null,
     } = req.body;
 
     if (!titulo.trim()) {
@@ -196,7 +201,7 @@ app.post('/api/tareas', async (req, res) => {
       min_anticipacion: Number(min_anticipacion),
       aviso_enviado: 0,
       nota: null,
-      usuario_id: null,
+      usuario_id: usuario_id != null ? Number(usuario_id) : null,
       fecha_creacion: new Date().toISOString(),
     };
 
