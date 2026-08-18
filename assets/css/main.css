@@ -559,6 +559,10 @@ img {
   transform: translateY(-1px);
 }
 
+.chip:active {
+  transform: translateY(0) scale(0.96);
+}
+
 .chip-dot {
   width: 10px;
   height: 10px;
@@ -576,6 +580,11 @@ img {
   gap: 18px;
 }
 
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .task-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -585,12 +594,21 @@ img {
   overflow: hidden;
   box-shadow: var(--shadow);
   cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  animation: cardIn 0.3s ease backwards;
 }
+
+.task-card:nth-child(1) { animation-delay: 0.02s; }
+.task-card:nth-child(2) { animation-delay: 0.06s; }
+.task-card:nth-child(3) { animation-delay: 0.1s; }
+.task-card:nth-child(4) { animation-delay: 0.14s; }
+.task-card:nth-child(5) { animation-delay: 0.18s; }
+.task-card:nth-child(6) { animation-delay: 0.22s; }
 
 .task-card:hover {
   transform: translateY(-4px);
   border-color: rgba(66, 133, 244, 0.4);
+  box-shadow: 0 24px 48px rgba(60, 64, 67, 0.16);
 }
 
 .task-card__top {
@@ -897,10 +915,21 @@ img {
   align-items: center;
   justify-content: center;
   padding: 24px;
+  animation: overlayIn 0.18s ease;
 }
 
 .modal-overlay.open {
   display: flex;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .modal {
@@ -912,6 +941,7 @@ img {
   padding: 26px;
   max-height: min(90vh, 900px);
   overflow-y: auto;
+  animation: modalIn 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .modal--form {
@@ -1010,6 +1040,7 @@ img {
   stroke-linecap: round;
   transform: rotate(-90deg);
   transform-origin: center;
+  transition: stroke-dashoffset 0.9s linear, stroke 0.4s ease;
 }
 
 .pomodoro-center {
@@ -1151,7 +1182,11 @@ img {
   color: var(--muted);
   padding: 12px 0;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.priority-btn:active {
+  transform: scale(0.95);
 }
 
 .priority-btn.active,
@@ -1230,6 +1265,10 @@ img {
 
 .btn:hover {
   transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
 .btn--secondary {
@@ -1327,6 +1366,16 @@ img {
   display: grid;
   place-items: center;
   z-index: 20;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.fab:hover {
+  transform: scale(1.08) rotate(90deg);
+  box-shadow: 0 20px 44px rgba(66, 133, 244, 0.45);
+}
+
+.fab:active {
+  transform: scale(0.94) rotate(90deg);
 }
 
 .select-filter {
@@ -1422,6 +1471,11 @@ img {
   z-index: 60;
 }
 
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .toast {
   padding: 14px 18px;
   border-radius: 16px;
@@ -1430,6 +1484,7 @@ img {
   background: #323232;
   border: 1px solid rgba(255,255,255,0.08);
   box-shadow: var(--shadow-soft);
+  animation: toastIn 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .toast--success { border-color: var(--ok); }
