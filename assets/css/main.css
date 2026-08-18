@@ -618,6 +618,64 @@ img {
   gap: 18px;
 }
 
+/* ── Acerca de ────────────────────────────────────────────────────────── */
+
+.about-section {
+  margin-top: 48px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.about-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 22px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px rgba(60, 64, 67, 0.14);
+}
+
+.about-card__icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(66, 133, 244, 0.1);
+  color: var(--accent-start);
+  margin-bottom: 14px;
+}
+
+.about-card__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.about-card h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.about-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 860px) {
+  .about-grid { grid-template-columns: 1fr; }
+}
+
 .task-list {
   display: grid;
   gap: 18px;
