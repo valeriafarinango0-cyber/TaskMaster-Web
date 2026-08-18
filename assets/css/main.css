@@ -295,6 +295,49 @@ img {
   height: 32px;
 }
 
+.hero__integrations {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.hero__integrations-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.hero__integrations-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.integration-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease;
+}
+
+.integration-icon:hover {
+  transform: translateY(-2px);
+}
+
+.integration-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
 .hero__mockup {
   position: relative;
 }
