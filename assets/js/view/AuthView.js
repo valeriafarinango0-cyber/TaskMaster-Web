@@ -157,9 +157,13 @@ class AuthView {
 
   _restoreUser() {
     const u = localStorage.getItem('tm_user');
+    let user = null;
     if (u) {
-      try { const user = JSON.parse(u); this.app.setUser(user); } catch(e){}
+      try { user = JSON.parse(u); } catch (e) { user = null; }
     }
+    // Siempre se llama, incluso sin sesión guardada, para que el gating de
+    // sesión (mostrar/ocultar el flujo de trabajo) se aplique desde el arranque.
+    this.app.setUser(user);
   }
 
   async logout() {

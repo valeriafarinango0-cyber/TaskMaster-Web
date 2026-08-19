@@ -185,6 +185,10 @@ class App {
     if (btnHeroReg) btnHeroReg.addEventListener('click', () => this.authView.openMode('register'));
     const btnGoogle = document.getElementById('btn-google-login');
     if (btnGoogle) btnGoogle.addEventListener('click', () => this.authView.loginWithProvider('google'));
+    const btnGateLogin = document.getElementById('btn-gate-login');
+    if (btnGateLogin) btnGateLogin.addEventListener('click', () => this.authView.openMode('login'));
+    const btnGateReg = document.getElementById('btn-gate-registrarse');
+    if (btnGateReg) btnGateReg.addEventListener('click', () => this.authView.openMode('register'));
     const btnLogout = document.getElementById('btn-logout');
     if (btnLogout) btnLogout.addEventListener('click', () => this.authView.logout());
     const btnCarga = document.getElementById('btn-carga-semanal');
@@ -232,6 +236,33 @@ class App {
 
     const hero = document.getElementById('hero-landing');
     if (hero) hero.style.display = user ? 'none' : '';
+
+    // Gating: el flujo de trabajo (filtros, carga semanal, lista de tareas,
+    // "Mi Panel", crear tarea) requiere sesión iniciada. La landing (hero,
+    // paso a paso, acerca de) siempre queda visible.
+    const workspace = ['home-panel', 'home-summary', 'task-section'];
+    workspace.forEach(id => {
+      const elWs = document.getElementById(id);
+      if (elWs) elWs.style.display = user ? '' : 'none';
+    });
+    const gatePrompt = document.getElementById('gate-prompt');
+    if (gatePrompt) gatePrompt.style.display = user ? 'none' : '';
+
+    const navOverview = document.querySelector('.nav-btn[data-view="overview"]');
+    if (navOverview) navOverview.style.display = user ? '' : 'none';
+
+    const btnFab = document.getElementById('btn-fab-nueva-tarea');
+    if (btnFab) btnFab.style.display = user ? '' : 'none';
+    const btnNuevaTareaHeader = document.getElementById('btn-nueva-tarea');
+    if (btnNuevaTareaHeader) btnNuevaTareaHeader.style.display = user ? '' : 'none';
+
+    // Si cerró sesión estando en el panel (que ya no es accesible), volver a Inicio
+    if (!user && this._vistaActual === 'overview') {
+      this._cambiarVista('home');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      const navHome = document.querySelector('.nav-btn[data-view="home"]');
+      if (navHome) navHome.classList.add('active');
+    }
   }
 
   _updateCountdown() {

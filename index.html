@@ -160,7 +160,7 @@
         </div>
       </section>
 
-      <div class="home-panel">
+      <div class="home-panel" id="home-panel">
         <div class="section-header">
           <div>
             <p class="section-label">CATEGORÍAS</p>
@@ -177,6 +177,22 @@
           </div>
         </div>
         <div class="filter-row" id="filter-row"></div>
+      </div>
+
+      <div class="gate-prompt" id="gate-prompt">
+        <span class="gate-prompt__icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M8 11V7.5a4 4 0 0 1 8 0V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="12" cy="15.2" r="1.4" fill="currentColor"/>
+          </svg>
+        </span>
+        <h3>Inicia sesión para ver tus tareas</h3>
+        <p>Crea una cuenta gratis o inicia sesión para guardar tus tareas, activar recordatorios y ver tu panel de avance.</p>
+        <div class="gate-prompt__actions">
+          <button class="btn btn--primary" id="btn-gate-login">Iniciar sesión</button>
+          <button class="btn btn--ghost" id="btn-gate-registrarse">Registrarse</button>
+        </div>
       </div>
 
       <section class="how-to">
@@ -205,7 +221,7 @@
         </div>
       </section>
 
-      <div class="home-summary">
+      <div class="home-summary" id="home-summary">
         <div class="home-summary__top">
           <div class="summary-card">
             <span class="summary-card__label">Carga semanal</span>
@@ -217,7 +233,7 @@
         </div>
         <div class="bar-chart" id="weekly-chart"></div>
       </div>
-      <div class="task-section">
+      <div class="task-section" id="task-section">
         <div class="task-list" id="task-list"></div>
       </div>
 
