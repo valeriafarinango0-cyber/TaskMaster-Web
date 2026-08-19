@@ -19,6 +19,9 @@ class HomeView {
     this.$statUrgent  = document.getElementById('stat-urgent');
     this.$statDone    = document.getElementById('stat-done');
 
+    // Estado de acordeones expandidos
+    this._expandedAccordions = new Set();
+
     if (this.$specialSelect) {
       this.$specialSelect.addEventListener('change', () => {
         this._vm.setFiltro(this.$specialSelect.value);
@@ -76,41 +79,230 @@ class HomeView {
 
   static ICON_TODAS = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.6"/></svg>';
 
+  static CATEGORY_METADATA = {
+    'Trabajo': {
+      tips: [
+        'Prioriza las 3 tareas más importantes cada día',
+        'Usa bloques de tiempo ininterrumpido para trabajo profundo',
+        'Revisa emails en horarios específicos, no continuamente'
+      ],
+      ejemplos: [
+        { titulo: 'Revisar emails', descripcion: 'Revisar y responder correos importantes' },
+        { titulo: 'Reunión de equipo', descripcion: 'Sincronización con el equipo' },
+        { titulo: 'Preparar presentación', descripcion: 'Diseñar y revisar diapositivas' },
+        { titulo: 'Entregar documento', descripcion: 'Finalizar y enviar documento' }
+      ]
+    },
+    'Estudio': {
+      tips: [
+        'Divide sesiones en bloques Pomodoro de 25 minutos',
+        'Toma descansos de 5 minutos entre bloques',
+        'Revisa la materia un día antes de examen o evaluación'
+      ],
+      ejemplos: [
+        { titulo: 'Leer capítulo', descripcion: 'Lectura de contenido asignado' },
+        { titulo: 'Resolver ejercicios', descripcion: 'Práctica de problemas' },
+        { titulo: 'Preparar examen', descripcion: 'Repasar temas clave' },
+        { titulo: 'Hacer proyecto', descripcion: 'Desarrollo del proyecto académico' }
+      ]
+    },
+    'Personal': {
+      tips: [
+        'Programa tiempo para ti y actividades que disfrutes',
+        'Equilibra obligaciones con descanso y ocio',
+        'Revisa tus objetivos personales semanalmente'
+      ],
+      ejemplos: [
+        { titulo: 'Llamar a familia', descripcion: 'Mantener contacto con seres queridos' },
+        { titulo: 'Leer un libro', descripcion: 'Tiempo de lectura y relajación' },
+        { titulo: 'Arreglar algo en casa', descripcion: 'Mantenimiento del hogar' },
+        { titulo: 'Organizar espacio', descripcion: 'Organización y limpieza' }
+      ]
+    },
+    'Bienestar': {
+      tips: [
+        'Ejercita al menos 30 minutos diarios',
+        'Prioriza dormir 7-8 horas cada noche',
+        'Dedica tiempo a meditación o actividades que calmen'
+      ],
+      ejemplos: [
+        { titulo: 'Ir al gimnasio', descripcion: 'Rutina de ejercicio' },
+        { titulo: 'Meditar', descripcion: 'Sesión de meditación' },
+        { titulo: 'Caminar', descripcion: 'Paseo al aire libre' },
+        { titulo: 'Stretching', descripcion: 'Ejercicios de flexibilidad' }
+      ]
+    },
+    'Recados': {
+      tips: [
+        'Agrupa recados por ubicación para ahorrar tiempo',
+        'Dedica un día a la semana para recados',
+        'Planifica rutas eficientes antes de salir'
+      ],
+      ejemplos: [
+        { titulo: 'Comprar groceries', descripcion: 'Ir al supermercado' },
+        { titulo: 'Pagar servicios', descripcion: 'Pagar cuentas y servicios' },
+        { titulo: 'Ir al banco', descripcion: 'Trámites bancarios' },
+        { titulo: 'Entregar paquete', descripcion: 'Enviar o recoger paquete' }
+      ]
+    },
+    'Planificación': {
+      tips: [
+        'Planifica tu semana cada lunes o domingo',
+        'Revisa tus objetivos cada mes',
+        'Ajusta planes según cambios en prioridades'
+      ],
+      ejemplos: [
+        { titulo: 'Planificar semana', descripcion: 'Revisar y organizar tareas semanales' },
+        { titulo: 'Definir objetivos', descripcion: 'Establecer metas mensuales o trimestrales' },
+        { titulo: 'Revisar progreso', descripcion: 'Evaluar avance en proyectos' },
+        { titulo: 'Actualizar lista', descripcion: 'Revisar y actualizar prioridades' }
+      ]
+    },
+    'Otros': {
+      tips: [
+        'Categoriza mejor tus tareas para mejor organización',
+        'Usa las categorías principales para agrupar trabajo',
+        'Revisa esta sección regularmente'
+      ],
+      ejemplos: [
+        { titulo: 'Tarea pendiente', descripcion: 'Tareas sin categoría' },
+        { titulo: 'Proyecto especial', descripcion: 'Proyectos únicos o especiales' },
+        { titulo: 'Idea para después', descripcion: 'Guardar para considerar luego' },
+        { titulo: 'Seguimiento', descripcion: 'Revisiones y seguimientos' }
+      ]
+    }
+  };
+
   renderFiltros() {
     const activo = this._vm.getFiltroActivo();
     const cats = this._vm.getGeneralCategories();
 
-    // Renderizar chips/botones de categorías en español
     this.$filterRow.innerHTML = '';
+
+    // Botón "Todas"
     const todasBtn = document.createElement('button');
     todasBtn.className = `chip ${activo === 'todas' ? 'chip--active' : ''}`;
     todasBtn.dataset.filter = 'todas';
     todasBtn.innerHTML = `<span class="chip-icon">${HomeView.ICON_TODAS}</span>Todas`;
     this.$filterRow.appendChild(todasBtn);
 
+    todasBtn.addEventListener('click', () => {
+      this._vm.setFiltro('todas');
+      if (this.$specialSelect) this.$specialSelect.value = 'todas';
+    });
+
+    // Categorías con acordeones
     cats.forEach(c => {
+      const container = document.createElement('div');
+      container.className = 'category-group';
+
+      // Chip de categoría
       const btn = document.createElement('button');
       btn.className = `chip ${activo === 'general:' + c.key ? 'chip--active' : ''}`;
       btn.dataset.filter = 'general:' + c.key;
+      btn.dataset.category = c.key;
       btn.style.borderColor = this._vm.getCategoryColor(c.key);
       btn.style.color = this._vm.getCategoryColor(c.key);
       const icon = HomeView.CATEGORY_ICONS[c.key] || HomeView.ICON_TODAS;
-      btn.innerHTML = `<span class="chip-icon">${icon}</span>${c.label}`;
-      this.$filterRow.appendChild(btn);
+      const toggleIcon = '<svg class="accordion-toggle" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 8l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+      btn.innerHTML = `<span class="chip-icon">${icon}</span>${c.label}<span class="chip-toggle">${toggleIcon}</span>`;
+      container.appendChild(btn);
+
+      // Acordeón con tips y ejemplos
+      const accordion = document.createElement('div');
+      accordion.className = 'category-accordion';
+      accordion.dataset.category = c.key;
+
+      const metadata = HomeView.CATEGORY_METADATA[c.key];
+      if (metadata) {
+        // Tips
+        const tipsHtml = `
+          <div class="accordion-tips">
+            <h4>💡 Consejos</h4>
+            <ul>
+              ${metadata.tips.map(tip => `<li>${HomeView._escapeHtml(tip)}</li>`).join('')}
+            </ul>
+          </div>`;
+        accordion.innerHTML += tipsHtml;
+
+        // Ejemplos de tareas
+        const ejemplosHtml = `
+          <div class="accordion-ejemplos">
+            <h4>📌 Ejemplos rápidos</h4>
+            <div class="ejemplos-grid">
+              ${metadata.ejemplos.map((ej, idx) => `
+                <button class="ejemplo-btn" data-titulo="${HomeView._escapeHtml(ej.titulo)}" data-desc="${HomeView._escapeHtml(ej.descripcion)}" data-cat="${c.key}">
+                  + ${HomeView._escapeHtml(ej.titulo)}
+                </button>
+              `).join('')}
+            </div>
+          </div>`;
+        accordion.innerHTML += ejemplosHtml;
+      }
+
+      container.appendChild(accordion);
+      this.$filterRow.appendChild(container);
+
+      // Eventos
+      btn.addEventListener('click', (e) => {
+        // No abrir modal si hacen clic en el toggle
+        if (e.target.closest('.chip-toggle')) {
+          e.preventDefault();
+          this._toggleAccordion(c.key);
+          return;
+        }
+
+        this._vm.setFiltro(btn.dataset.filter);
+        if (this.$specialSelect) this.$specialSelect.value = 'todas';
+      });
+
+      // Toggle del acordeón al hacer clic en el icono
+      const toggleBtn = btn.querySelector('.chip-toggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._toggleAccordion(c.key);
+        });
+      }
     });
 
-    this.$filterRow.querySelectorAll('.chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        this._vm.setFiltro(chip.dataset.filter);
-        if (this.$specialSelect) this.$specialSelect.value = 'todas';
-
-        // Además de filtrar, abrir el formulario de nueva tarea con la categoría precargada
-        if (chip.dataset.filter !== 'todas' && window.app && window.app.modalView) {
-          const categoryKey = chip.dataset.filter.replace('general:', '');
-          window.app.modalView.abrirNueva({ general_categoria: categoryKey });
+    // Eventos para botones de ejemplos
+    this.$filterRow.querySelectorAll('.ejemplo-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const titulo = btn.dataset.titulo;
+        const desc = btn.dataset.desc;
+        const cat = btn.dataset.cat;
+        if (window.app && window.app.modalView) {
+          const defaults = {
+            titulo,
+            descripcion: desc,
+            general_categoria: cat
+          };
+          window.app.modalView.abrirNueva(defaults);
         }
       });
     });
+  }
+
+  _toggleAccordion(categoryKey) {
+    if (this._expandedAccordions.has(categoryKey)) {
+      this._expandedAccordions.delete(categoryKey);
+    } else {
+      this._expandedAccordions.add(categoryKey);
+    }
+
+    const accordion = this.$filterRow.querySelector(`.category-accordion[data-category="${categoryKey}"]`);
+    if (accordion) {
+      accordion.classList.toggle('open');
+    }
+
+    const toggle = this.$filterRow.querySelector(`.chip[data-category="${categoryKey}"] .chip-toggle`);
+    if (toggle) {
+      toggle.classList.toggle('rotated');
+    }
   }
 
   // ── Lista de tareas ───────────────────────────────────────────────────────
