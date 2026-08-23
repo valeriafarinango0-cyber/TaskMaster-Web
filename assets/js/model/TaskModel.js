@@ -23,7 +23,7 @@ class TaskModel {
     // ── GET: todas las tareas ─────────────────────────────────────────────────
     async getAll() {
         try {
-            const res  = aw fetch(this.API_TAREAS, { credentials: 'include' });
+            const res  = await fetch(this.API_TAREAS, { credentials: 'include' });
             const data = await res.json();
             if (res.ok && data.success) {
                 this._tareas = data.tareas;
