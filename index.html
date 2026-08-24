@@ -384,6 +384,9 @@
   <button class="fab" id="btn-fab-nueva-tarea" title="Nueva tarea">+</button>
   <div class="toast-container" id="toast-container"></div>
 
+  <!-- Firestore (sincronizacion en tiempo real); expone window.__firebase -->
+  <script type="module" src="assets/js/firebase-init.js"></script>
+
   <!-- Scripts en orden MVVM: Model → ViewModel → View → App -->
   <script src="assets/js/model/TaskModel.js"></script>
   <script src="assets/js/model/CategoriaModel.js"></script>
@@ -396,7 +399,3 @@
   <script src="assets/js/app.js"></script>
 </body>
 </html>
-<script type="module">
-  import { db } from "./assets/js/firebase-init.js";
-  console.log("Firebase conectado:", db.app.options.projectId);
-</script>

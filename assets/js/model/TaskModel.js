@@ -1,8 +1,16 @@
 /**
  * CAPA MODEL — TaskModel.js
- * Consumo de la API PHP (api/tareas.php).
+ * Consumo de la API PHP (api/tareas.php) — sigue siendo la fuente de verdad.
  * Login opcional: sin sesión, la API trabaja en modo invitado.
  * Fallback automático a localStorage cuando no hay conexión.
+ *
+ * Sincronización en tiempo real (Firestore, opcional):
+ * cada create/update/delete que confirma la API PHP se espeja además en
+ * Firestore (colección "tareas", documento = id numérico de MySQL). Otras
+ * pestañas/dispositivos escuchan esos cambios via subscribeRealtime() y
+ * se actualizan sin necesidad de refrescar. Si Firestore no está disponible
+ * (sin conexión, reglas que lo impiden, etc.) todo esto falla en silencio:
+ * la app sigue funcionando igual con PHP + localStorage.
  */
 
 class TaskModel {
@@ -18,6 +26,64 @@ class TaskModel {
     _lsNextId() {
         const t = this._lsGet();
         return t.length ? Math.max(...t.map(x => x.id)) + 1 : 1;
+    }
+
+    // ── Firestore: espejo best-effort de cada operación confirmada por PHP ─────
+    _fb() { return window.__firebase || null; }
+
+    async _fbMirrorSet(tarea) {
+        const fb = this._fb();
+        if (!fb || !tarea || tarea.id == null) return;
+        try {
+            await fb.setDoc(fb.doc(fb.db, 'tareas', String(tarea.id)), tarea, { merge: true });
+        } catch (e) {
+            console.warn('Firestore: no se pudo sincronizar la tarea', e.code || e);
+        }
+    }
+
+    async _fbMirrorDelete(id) {
+        const fb = this._fb();
+        if (!fb || id == null) return;
+        try {
+            await fb.deleteDoc(fb.doc(fb.db, 'tareas', String(id)));
+        } catch (e) {
+            console.warn('Firestore: no se pudo eliminar la tarea remota', e.code || e);
+        }
+    }
+
+    /**
+     * Escucha cambios en tiempo real desde Firestore (otras pestañas/dispositivos)
+     * y llama a onChange(tareasActualizadas) cuando algo cambia.
+     * Devuelve la función de "unsubscribe", o null si Firestore no está disponible.
+     */
+    subscribeRealtime(onChange) {
+        const fb = this._fb();
+        if (!fb) return null;
+        try {
+            return fb.onSnapshot(fb.collection(fb.db, 'tareas'), snapshot => {
+                let cambio = false;
+                snapshot.docChanges().forEach(change => {
+                    const data = { ...change.doc.data(), id: Number(change.doc.id) };
+                    const idx  = this._tareas.findIndex(t => t.id === data.id);
+                    if (change.type === 'removed') {
+                        if (idx >= 0) { this._tareas.splice(idx, 1); cambio = true; }
+                    } else if (idx >= 0) {
+                        this._tareas[idx] = { ...this._tareas[idx], ...data };
+                        cambio = true;
+                    } else {
+                        this._tareas.push(data);
+                        cambio = true;
+                    }
+                });
+                if (cambio) {
+                    this._lsSave(this._tareas);
+                    onChange([...this._tareas]);
+                }
+            }, err => console.warn('Firestore: escucha en tiempo real interrumpida', err.code || err));
+        } catch (e) {
+            console.warn('Firestore: no se pudo suscribir a cambios en tiempo real', e.code || e);
+            return null;
+        }
     }
 
     // ── GET: todas las tareas ─────────────────────────────────────────────────
@@ -56,6 +122,7 @@ class TaskModel {
             if (res.ok && data.success) {
                 this._tareas.push(data.tarea);
                 this._lsSave(this._tareas);
+                this._fbMirrorSet(data.tarea);
                 return { success: true, tarea: data.tarea };
             }
             return data;
@@ -65,6 +132,7 @@ class TaskModel {
             arr.push(nueva);
             this._lsSave(arr);
             this._tareas = arr;
+            this._fbMirrorSet(nueva);
             return { success: true, tarea: nueva };
         }
     }
@@ -82,6 +150,7 @@ class TaskModel {
             if (res.ok && data.success) {
                 this._tareas = this._tareas.map(t => t.id === id ? { ...t, ...cambios } : t);
                 this._lsSave(this._tareas);
+                this._fbMirrorSet(this._tareas.find(t => t.id === id));
                 return { success: true };
             }
             const arr = this._lsGet().map(t => t.id === id ? { ...t, ...cambios } : t);
@@ -92,6 +161,7 @@ class TaskModel {
             const arr = this._lsGet().map(t => t.id === id ? { ...t, ...cambios } : t);
             this._lsSave(arr);
             this._tareas = arr;
+            this._fbMirrorSet(arr.find(t => t.id === id));
             return { success: true };
         }
     }
@@ -109,6 +179,7 @@ class TaskModel {
             if (res.ok && data.success) {
                 this._tareas = this._tareas.filter(t => t.id !== id);
                 this._lsSave(this._tareas);
+                this._fbMirrorDelete(id);
                 return { success: true };
             }
             const arr = this._lsGet().filter(t => t.id !== id);
@@ -119,6 +190,7 @@ class TaskModel {
             const arr = this._lsGet().filter(t => t.id !== id);
             this._lsSave(arr);
             this._tareas = arr;
+            this._fbMirrorDelete(id);
             return { success: true };
         }
     }

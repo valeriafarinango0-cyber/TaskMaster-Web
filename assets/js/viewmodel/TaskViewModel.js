@@ -68,6 +68,12 @@ class TaskViewModel {
     this._notify('tareasActualizadas');
   }
 
+  /** Aplica un cambio recibido en tiempo real (Firestore) desde otra pestaña/dispositivo. */
+  aplicarActualizacionRemota(tareas) {
+    this._state.tareas = tareas;
+    this._notify('tareasActualizadas');
+  }
+
   // ── Acciones sobre tareas ─────────────────────────────────────────────────
 
   async crearTarea(datos) {

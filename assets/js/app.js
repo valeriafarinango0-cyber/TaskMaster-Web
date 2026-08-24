@@ -29,6 +29,22 @@ class App {
   async _iniciar() {
     await taskViewModel.cargarTodo();
     this.homeView.render();
+    this._iniciarSyncTiempoReal();
+  }
+
+  // ── Sincronización en tiempo real (Firestore, opcional) ─────────────────────
+  // Otras pestañas/dispositivos escriben en Firestore al confirmar cada
+  // create/update/delete via PHP; aquí escuchamos esos cambios y actualizamos
+  // la UI sin recargar. Si Firestore no está disponible, no pasa nada — la
+  // app sigue funcionando igual con PHP + localStorage.
+  _iniciarSyncTiempoReal() {
+    const suscribirse = () => {
+      taskModel.subscribeRealtime(tareasActualizadas => {
+        taskViewModel.aplicarActualizacionRemota(tareasActualizadas);
+      });
+    };
+    if (window.__firebase) suscribirse();
+    else window.addEventListener('firebase-ready', suscribirse, { once: true });
   }
 
   // ── Suscripción al ViewModel ──────────────────────────────────────────────

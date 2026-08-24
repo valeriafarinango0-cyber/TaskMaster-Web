@@ -94,7 +94,37 @@ desplegado en un hosting con dominio propio** — es una decisión pendiente
 (proveedor de hosting con soporte PHP+MySQL, o migrar el backend a un servicio
 como Railway/Render, y registrar un dominio).
 
-## 4. Cómo ejecutarlo en local
+## 4. Sincronización en tiempo real (Firestore)
+
+`assets/js/firebase-init.js` conecta con un proyecto real de Firebase
+(`taskmaster-web-e81b4`). `TaskModel.js` espeja cada `create`/`update`/`delete`
+confirmado por PHP hacia la colección `tareas` de Firestore, y
+`subscribeRealtime()` escucha cambios en tiempo real (para que, por ejemplo,
+dos pestañas abiertas se actualicen solas sin recargar). Es un complemento
+opcional y de "mejor esfuerzo": si Firestore no responde, la app sigue
+funcionando igual con PHP + localStorage — nunca bloquea nada.
+
+**Estado verificado:** las lecturas contra Firestore funcionan correctamente
+(probado contra el proyecto real). Las escrituras (`setDoc`/`deleteDoc`) no se
+pudieron confirmar en pruebas automatizadas — muy probablemente porque las
+**Reglas de seguridad de Firestore** del proyecto todavía no permiten escribir
+en la colección `tareas`. Para habilitarlo, en la consola de Firebase
+(Firestore Database → Reglas) usar algo como:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tareas/{tareaId} {
+      allow read, write: if true; // demo/desarrollo — sin autenticación
+    }
+  }
+}
+```
+
+(Para producción, reemplazar `if true` por una regla que valide sesión/usuario.)
+
+## 5. Cómo ejecutarlo en local
 
 1. Levantar MySQL (por ejemplo con XAMPP) e importar `database/taskmaster_db.sql`.
 2. Desde la carpeta del proyecto, correr `php -S localhost:8000`.
