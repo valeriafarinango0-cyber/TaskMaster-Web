@@ -22,6 +22,17 @@ $conexion->query("CREATE TABLE IF NOT EXISTS categorias (
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
+// Migraciones defensivas: la tabla puede ya existir con un esquema mas viejo
+// (sin usuario_id, o con "emoji" en vez de "icono").
+$colUsr = $conexion->query("SHOW COLUMNS FROM categorias LIKE 'usuario_id'");
+if ($colUsr && $colUsr->num_rows === 0) {
+    $conexion->query("ALTER TABLE categorias ADD COLUMN usuario_id INT NULL");
+}
+$colIco = $conexion->query("SHOW COLUMNS FROM categorias LIKE 'icono'");
+if ($colIco && $colIco->num_rows === 0) {
+    $conexion->query("ALTER TABLE categorias ADD COLUMN icono VARCHAR(10) DEFAULT NULL");
+}
+
 // Login opcional: sin sesion, las categorias son las "de invitado" (usuario_id NULL)
 $userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null;
 $metodo = $_SERVER['REQUEST_METHOD'];

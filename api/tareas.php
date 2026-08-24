@@ -31,6 +31,15 @@ $conexion->query("CREATE TABLE IF NOT EXISTS categorias (
     fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+// La tabla categorias puede ya existir con un esquema mas viejo (sin estas columnas)
+$colCatUsr = $conexion->query("SHOW COLUMNS FROM categorias LIKE 'usuario_id'");
+if ($colCatUsr && $colCatUsr->num_rows === 0) {
+    $conexion->query("ALTER TABLE categorias ADD COLUMN usuario_id INT NULL");
+}
+$colCatIco = $conexion->query("SHOW COLUMNS FROM categorias LIKE 'icono'");
+if ($colCatIco && $colCatIco->num_rows === 0) {
+    $conexion->query("ALTER TABLE categorias ADD COLUMN icono VARCHAR(10) DEFAULT NULL");
+}
 
 // Login opcional: sin sesion, se trabaja en modo invitado (usuario_id IS NULL)
 $userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null;
