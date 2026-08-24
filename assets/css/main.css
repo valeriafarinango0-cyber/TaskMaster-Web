@@ -721,6 +721,45 @@ img {
   display: flex;
 }
 
+/* Login obligatorio: fondo solido (no se ve ni se puede interactuar con el
+   panel de atras), z-index por encima de cualquier otro modal. */
+.modal-overlay--gate {
+  background: var(--bg);
+  backdrop-filter: none;
+  z-index: 200;
+}
+
+.sync-apps {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.sync-apps__label {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 12px;
+}
+
+.sync-apps__icons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.sync-apps__icons span {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+}
+
 .modal {
   width: min(680px, 100%);
   background: rgba(15, 25, 41, 0.98);

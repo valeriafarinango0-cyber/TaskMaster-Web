@@ -25,8 +25,25 @@ class App {
   }
 
   // ── Carga inicial ─────────────────────────────────────────────────────────
+  // Login obligatorio: si no hay sesión guardada, el panel queda bloqueado
+  // detrás del modal de acceso (AuthView.abrirGate) y no se cargan tareas
+  // hasta que el usuario inicie sesión o se registre.
 
   async _iniciar() {
+    const haySesion = this.authView._restoreUser();
+    if (!haySesion) {
+      this.authView.abrirGate();
+      return;
+    }
+    await this._cargarPanel();
+  }
+
+  /** Se llama desde AuthView tras un login/registro exitoso durante el gate. */
+  async onAuthenticated() {
+    await this._cargarPanel();
+  }
+
+  async _cargarPanel() {
     await taskViewModel.cargarTodo();
     this.homeView.render();
     this._iniciarSyncTiempoReal();
