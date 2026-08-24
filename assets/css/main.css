@@ -290,16 +290,9 @@ img {
 
 .filter-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  overflow-x: auto;
-  padding: 4px 4px 16px 0;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(to right, black calc(100% - 36px), transparent 100%);
-  mask-image: linear-gradient(to right, black calc(100% - 36px), transparent 100%);
-}
-
-.filter-row::-webkit-scrollbar {
-  display: none;
+  padding: 4px 0 16px;
 }
 
 .chip {
