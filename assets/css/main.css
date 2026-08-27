@@ -228,6 +228,9 @@ img {
 }
 
 .hero__feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   padding: 7px 14px;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.05);
@@ -236,6 +239,12 @@ img {
   font-weight: 600;
   color: var(--muted);
   white-space: nowrap;
+}
+
+.hero__feature-icon {
+  width: 15px;
+  height: 15px;
+  color: var(--accent-start);
 }
 
 .hero-sync {
@@ -268,6 +277,11 @@ img {
   display: grid;
   place-items: center;
   font-size: 16px;
+}
+
+.hero-sync__icons span img {
+  width: 18px;
+  height: 18px;
 }
 
 .header-summary {
@@ -613,6 +627,75 @@ img {
 .task-list {
   display: grid;
   gap: 16px;
+}
+
+/* ── CÓMO FUNCIONA ──────────────────────────────────────────────────────── */
+
+.how-section {
+  margin-top: 48px;
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.how-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 22px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.how-card:hover {
+  transform: translateY(-3px);
+}
+
+.how-card__icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(0, 201, 255, 0.1);
+  color: var(--accent-start);
+  margin-bottom: 14px;
+}
+
+.how-card__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.how-card__step {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.how-card h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.how-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 860px) {
+  .how-grid { grid-template-columns: 1fr; }
 }
 
 /* ── ACERCA DE ──────────────────────────────────────────────────────────── */
@@ -1047,6 +1130,11 @@ img {
   display: grid;
   place-items: center;
   font-size: 17px;
+}
+
+.sync-apps__icons span img {
+  width: 19px;
+  height: 19px;
 }
 
 .modal {

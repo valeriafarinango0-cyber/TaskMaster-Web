@@ -37,10 +37,40 @@
         <p class="hero__subtitle">Trabajo, estudio, hogar o proyectos personales — crea tus propias categorías, prioriza con claridad y mantén el enfoque con sesiones Pomodoro.</p>
 
         <div class="hero__features">
-          <span class="hero__feature">🎯 Categorías personalizadas</span>
-          <span class="hero__feature">🍅 Enfoque Pomodoro</span>
-          <span class="hero__feature">🔔 Recordatorios inteligentes</span>
-          <span class="hero__feature">🏆 Niveles y rachas</span>
+          <span class="hero__feature">
+            <svg class="hero__feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.59 13.41L13.42 20.58C13.0343 20.9647 12.5274 21.1716 12 21.1716C11.4726 21.1716 10.9657 20.9647 10.58 20.58L2 12V2H12L20.59 10.59C20.9625 10.9647 21.1716 11.4716 21.1716 12C21.1716 12.5284 20.9625 13.0353 20.59 13.41Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="7" cy="7" r="1.4" fill="currentColor"/>
+            </svg>
+            Categorías personalizadas
+          </span>
+          <span class="hero__feature">
+            <svg class="hero__feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="13" r="8" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M12 9V13L15 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 2H14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M12 2V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            Enfoque Pomodoro
+          </span>
+          <span class="hero__feature">
+            <svg class="hero__feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 14 3 17 3 17H21C21 17 18 14 18 8Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 13.0012 21.7295C12.7005 21.9044 12.3589 21.9965 12.0121 21.9965C11.6652 21.9965 11.3236 21.9044 11.0229 21.7295C10.7222 21.5547 10.4699 21.3031 10.2941 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Recordatorios inteligentes
+          </span>
+          <span class="hero__feature">
+            <svg class="hero__feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 4H17V10C17 12.7614 14.7614 15 12 15C9.23858 15 7 12.7614 7 10V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M7 5H4V6C4 8.20914 5.79086 10 8 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M17 5H20V6C20 8.20914 18.2091 10 16 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 15V18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M8 21H16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M9.5 18H14.5L15 21H9L9.5 18Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+            Niveles y rachas
+          </span>
         </div>
 
         <button class="btn btn--primary btn--hero" id="btn-nueva-tarea">+ Nueva tarea</button>
@@ -48,9 +78,9 @@
         <div class="hero-sync">
           <p class="hero-sync__label">Se sincroniza con</p>
           <div class="hero-sync__icons">
-            <span title="Google Calendar">📅</span>
-            <span title="Google Classroom">🎓</span>
-            <span title="Google Drive">📁</span>
+            <span title="Google Calendar"><img src="assets/img/integration-calendar.svg" alt="Google Calendar" /></span>
+            <span title="Google Classroom"><img src="assets/img/integration-classroom.svg" alt="Google Classroom" /></span>
+            <span title="Gmail"><img src="assets/img/integration-gmail.svg" alt="Gmail" /></span>
             <span title="OneDrive">☁️</span>
           </div>
         </div>
@@ -158,6 +188,58 @@
       <div class="task-section">
         <div class="task-list" id="task-list"></div>
       </div>
+
+      <section class="how-section">
+        <div class="section-header">
+          <div>
+            <p class="section-label">CÓMO FUNCIONA</p>
+            <h2>Empieza con TaskMaster</h2>
+          </div>
+        </div>
+        <div class="how-grid">
+          <article class="how-card">
+            <span class="how-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M3 8H21" stroke="currentColor" stroke-width="1.6"/>
+                <circle cx="18" cy="6" r="1" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="how-card__step">Paso 1</span>
+            <h3>Inicia sesión</h3>
+            <p>Crea una cuenta gratuita o entra con Google — tus tareas quedan asociadas a tu cuenta.</p>
+          </article>
+          <article class="how-card">
+            <span class="how-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M3 8H21" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M7 12H17" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M7 16H17" stroke="currentColor" stroke-width="1.6"/>
+                <circle cx="5" cy="12" r="1.5" fill="currentColor"/>
+                <circle cx="5" cy="16" r="1.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="how-card__step">Paso 2</span>
+            <h3>Crea tu tarea</h3>
+            <p>Ponle título, categoría, prioridad y fecha límite — o crea tus propias categorías al vuelo.</p>
+          </article>
+          <article class="how-card">
+            <span class="how-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M12 7V12L15.5 14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 3H15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M9 21H15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="how-card__step">Paso 3</span>
+            <h3>Sigue tu avance</h3>
+            <p>Enfócate con Pomodoro, revisa tu semana y sube de nivel con cada tarea completada.</p>
+          </article>
+        </div>
+      </section>
 
       <section class="about-section" id="acerca-de">
         <div class="section-header">
@@ -483,9 +565,9 @@
         <div class="sync-apps">
           <p class="sync-apps__label">Se sincroniza con</p>
           <div class="sync-apps__icons">
-            <span title="Google Calendar">📅</span>
-            <span title="Google Classroom">🎓</span>
-            <span title="Google Drive">📁</span>
+            <span title="Google Calendar"><img src="assets/img/integration-calendar.svg" alt="Google Calendar" /></span>
+            <span title="Google Classroom"><img src="assets/img/integration-classroom.svg" alt="Google Classroom" /></span>
+            <span title="Gmail"><img src="assets/img/integration-gmail.svg" alt="Gmail" /></span>
             <span title="OneDrive">☁️</span>
           </div>
         </div>
