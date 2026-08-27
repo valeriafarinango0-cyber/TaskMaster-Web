@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.firebase-adminsdk*.json
+*-adminsdk-*.json
+.vscode/
+notify.log
+serviceAccountKey.json
+*.serviceAccountKey.json

@@ -1,5 +1,6 @@
 /**
  * CAPA MODEL — TaskModel.js
+<<<<<<< HEAD
  * Consumo de la API PHP (api/tareas.php) — sigue siendo la fuente de verdad.
  * Login opcional: sin sesión, la API trabaja en modo invitado.
  * Fallback automático a localStorage cuando no hay conexión.
@@ -11,12 +12,22 @@
  * se actualizan sin necesidad de refrescar. Si Firestore no está disponible
  * (sin conexión, reglas que lo impiden, etc.) todo esto falla en silencio:
  * la app sigue funcionando igual con PHP + localStorage.
+=======
+ * Consumo de la API Node/Express.
+ * Endpoints: api/tareas | api/materias
+ * Fallback: localStorage cuando no hay conexión.
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
  */
 
 class TaskModel {
 
     constructor() {
+<<<<<<< HEAD
         this.API_TAREAS = 'api/tareas.php';
+=======
+        this.API_TAREAS   = 'api/tareas';
+        this.API_MATERIAS = 'api/materias';
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         this._tareas = [];
     }
 
@@ -28,6 +39,7 @@ class TaskModel {
         return t.length ? Math.max(...t.map(x => x.id)) + 1 : 1;
     }
 
+<<<<<<< HEAD
     // ── Firestore: espejo best-effort de cada operación confirmada por PHP ─────
     _fb() { return window.__firebase || null; }
 
@@ -82,6 +94,14 @@ class TaskModel {
             }, err => console.warn('Firestore: escucha en tiempo real interrumpida', err.code || err));
         } catch (e) {
             console.warn('Firestore: no se pudo suscribir a cambios en tiempo real', e.code || e);
+=======
+    // ── Usuario en sesión (para asociar y filtrar tareas) ─────────────────────
+    _userId() {
+        try {
+            const u = JSON.parse(localStorage.getItem('tm_user') || 'null');
+            return u && u.id ? u.id : null;
+        } catch (e) {
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
             return null;
         }
     }
@@ -89,6 +109,7 @@ class TaskModel {
     // ── GET: todas las tareas ─────────────────────────────────────────────────
     async getAll() {
         try {
+<<<<<<< HEAD
             const res  = await fetch(this.API_TAREAS, { credentials: 'include' });
             const data = await res.json();
             if (res.ok && data.success) {
@@ -96,6 +117,20 @@ class TaskModel {
                 this._lsSave(this._tareas);
                 return this._tareas;
             }
+=======
+            const uid = this._userId();
+            const url = uid ? `${this.API_TAREAS}?usuario_id=${uid}` : this.API_TAREAS;
+            const res  = await fetch(url, { credentials: 'include' });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                this._tareas = data.tareas;
+                this._lsSave(this._tareas); // sincronizar localStorage
+                return this._tareas;
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al obtener tareas. Usando localStorage.');
+            }
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         } catch (e) {
             console.warn('API no disponible — usando localStorage', e);
         }
@@ -116,23 +151,42 @@ class TaskModel {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
+<<<<<<< HEAD
                 body: JSON.stringify(tarea)
+=======
+                body: JSON.stringify({ ...tarea, usuario_id: this._userId() })
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
             });
             const data = await res.json();
             if (res.ok && data.success) {
                 this._tareas.push(data.tarea);
                 this._lsSave(this._tareas);
+<<<<<<< HEAD
                 this._fbMirrorSet(data.tarea);
                 return { success: true, tarea: data.tarea };
             }
             return data;
         } catch (e) {
             const nueva = { ...tarea, id: this._lsNextId(), completada: 0, pomodoros_real: 0 };
+=======
+                return { success: true, tarea: data.tarea };
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al crear tarea. Usando localStorage.');
+            }
+            return data;
+        } catch (e) {
+            // Fallback offline
+            const nueva = { ...tarea, usuario_id: this._userId(), id: this._lsNextId(), completada: 0, pomodoros_real: 0 };
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
             const arr = this._lsGet();
             arr.push(nueva);
             this._lsSave(arr);
             this._tareas = arr;
+<<<<<<< HEAD
             this._fbMirrorSet(nueva);
+=======
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
             return { success: true, tarea: nueva };
         }
     }
@@ -150,6 +204,7 @@ class TaskModel {
             if (res.ok && data.success) {
                 this._tareas = this._tareas.map(t => t.id === id ? { ...t, ...cambios } : t);
                 this._lsSave(this._tareas);
+<<<<<<< HEAD
                 this._fbMirrorSet(this._tareas.find(t => t.id === id));
                 return { success: true };
             }
@@ -164,6 +219,23 @@ class TaskModel {
             this._fbMirrorSet(arr.find(t => t.id === id));
             return { success: true };
         }
+=======
+                return { success: true };
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al actualizar tarea. Usando localStorage.');
+            } else {
+                console.warn('API no disponible al actualizar tarea. Usando localStorage.');
+            }
+        } catch (e) {
+            console.warn('API no disponible al actualizar tarea. Usando localStorage.', e);
+        }
+        // Si el servidor no confirmó el cambio (error HTTP o excepción de red), aplicarlo localmente
+        const arr = this._lsGet().map(t => t.id === id ? { ...t, ...cambios } : t);
+        this._lsSave(arr);
+        this._tareas = arr;
+        return { success: true };
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
     }
 
     // ── DELETE: eliminar tarea ────────────────────────────────────────────────
@@ -179,6 +251,7 @@ class TaskModel {
             if (res.ok && data.success) {
                 this._tareas = this._tareas.filter(t => t.id !== id);
                 this._lsSave(this._tareas);
+<<<<<<< HEAD
                 this._fbMirrorDelete(id);
                 return { success: true };
             }
@@ -193,6 +266,23 @@ class TaskModel {
             this._fbMirrorDelete(id);
             return { success: true };
         }
+=======
+                return { success: true };
+            }
+            if (res.status === 401) {
+                console.warn('No autorizado al eliminar tarea. Usando localStorage.');
+            } else {
+                console.warn('API no disponible al eliminar tarea. Usando localStorage.');
+            }
+        } catch (e) {
+            console.warn('API no disponible al eliminar tarea. Usando localStorage.', e);
+        }
+        // Si el servidor no confirmó el borrado (error HTTP o excepción de red), aplicarlo localmente
+        const arr = this._lsGet().filter(t => t.id !== id);
+        this._lsSave(arr);
+        this._tareas = arr;
+        return { success: true };
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
     }
 
     // ── Toggle completada ─────────────────────────────────────────────────────
@@ -202,9 +292,14 @@ class TaskModel {
         return this.update(id, { completada: tarea.completada ? 0 : 1 });
     }
 
+<<<<<<< HEAD
     // ── Urgencia dinámica (HU-02): 0-100% según proximidad a la fecha límite ───
     calcularUrgencia(fechaLimite) {
         if (!fechaLimite) return 0;
+=======
+    // ── Utilidades ────────────────────────────────────────────────────────────
+    calcularUrgencia(fechaLimite) {
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         const ahora    = new Date();
         const limite   = new Date(fechaLimite);
         const creacion = new Date(limite.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -214,12 +309,16 @@ class TaskModel {
     }
 
     etiquetaFecha(fechaLimite) {
+<<<<<<< HEAD
         if (!fechaLimite) return { texto: 'Sin fecha', clase: 'vence--normal' };
+=======
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         const ahora  = new Date();
         const limite = new Date(fechaLimite);
         const diff   = limite - ahora;
         const horas  = Math.floor(diff / 3_600_000);
         const dias   = Math.floor(diff / 86_400_000);
+<<<<<<< HEAD
         if (diff < 0)   return { texto: 'Vencida',       clase: 'vence--hoy' };
         if (horas < 24) return { texto: `Hoy · ${horas}h`, clase: 'vence--hoy' };
         if (dias === 1) return { texto: 'Mañana',        clase: 'vence--pronto' };
@@ -246,6 +345,22 @@ class TaskModel {
             const f = new Date(t.fecha_limite);
             const idx = res.findIndex(r => r.fecha.toDateString() === f.toDateString());
             if (idx >= 0) res[idx].tareas.push(t);
+=======
+        if (diff < 0)   return { texto: 'Vencida',      clase: 'vence--hoy' };
+        if (horas < 24) return { texto: `${horas}h`,    clase: 'vence--hoy' };
+        if (dias  < 3)  return { texto: `${dias} días`, clase: 'vence--pronto' };
+        return { texto: limite.toLocaleDateString('es-EC', { day:'2-digit', month:'short' }), clase: 'vence--normal' };
+    }
+
+    agruparPorDia(tareas) {
+        const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+        const hoy  = new Date().getDay();
+        const res  = dias.map((d, i) => ({ dia: d, tareas: [], esHoy: i === hoy }));
+        tareas.forEach(t => {
+            if (!t.fecha_limite) return;
+            const d = new Date(t.fecha_limite).getDay();
+            res[d].tareas.push(t);
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         });
         return res;
     }

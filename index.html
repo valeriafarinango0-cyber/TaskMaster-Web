@@ -3,15 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD
   <title>TaskMaster</title>
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="stylesheet" href="assets/css/responsive.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+=======
+  <title>TaskMaster - Avance 100% Completo</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- PWA: instalable y con soporte offline (ver sw.js) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4285F4" />
+  <link rel="icon" href="assets/img/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/img/icon-192.png" />
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
 </head>
 <body>
 
   <header class="app-header">
+<<<<<<< HEAD
     <nav class="top-nav">
       <div class="brand">
         <img src="assets/img/logo.svg" class="brand-icon" alt="TaskMaster" />
@@ -111,6 +124,42 @@
       </div>
     </div>
 
+=======
+    <div class="header-inner">
+      <div class="brand">
+        <img src="assets/img/logo.svg" alt="TaskMaster" class="brand-logo" />
+        <div>
+          <p class="brand-label">TaskMaster</p>
+          <span class="brand-subtitle">Organiza tu día con enfoque</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div>
+          <div class="welcome" id="header-welcome">Bienvenido</div>
+          <div class="header-countdown" id="header-countdown"></div>
+        </div>
+        <button class="btn btn--secondary" id="btn-google-login">
+          <span class="google-icon">
+            <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+            </svg>
+          </span>
+          Iniciar con Google
+        </button>
+        <button class="btn btn--ghost" id="btn-login">Iniciar sesión</button>
+        <button class="btn btn--ghost" id="btn-registrarse">Registrarse</button>
+        <button class="btn btn--ghost" id="btn-logout" style="display:none;">Cerrar sesión</button>
+        <button class="btn btn--primary" id="btn-nueva-tarea">Nueva tarea</button>
+      </div>
+    </div>
+    <div class="header-nav">
+      <button class="nav-btn active" data-view="home">Inicio</button>
+      <button class="nav-btn" data-view="overview">Mi Panel</button>
+    </div>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
     <div class="header-summary">
       <div class="stat-card">
         <span class="stat-label">Tareas totales</span>
@@ -125,12 +174,16 @@
         <strong id="stat-done">0</strong>
       </div>
     </div>
+<<<<<<< HEAD
 
     <div class="nivel-card" id="nivel-card"></div>
+=======
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
   </header>
 
   <main class="app-main">
 
+<<<<<<< HEAD
     <!-- ═══════════ PANTALLA 1 — INICIO ═══════════ -->
     <section id="view-home" class="view active">
       <div class="section-header" id="home-section-header">
@@ -156,6 +209,178 @@
       </div>
 
       <section class="about-section" id="acerca-de">
+=======
+    <!-- Vista Inicio -->
+    <section id="view-home" class="view active">
+
+      <section class="hero" id="hero-landing">
+        <div class="hero__dots"></div>
+        <div class="hero__content">
+          <div class="hero__copy">
+            <p class="hero__eyebrow">Gestión de tareas simple</p>
+            <h1 class="hero__title">Organiza tu día con enfoque</h1>
+            <p class="hero__subtitle">Prioriza lo urgente, recibe recordatorios a tiempo y sigue tu avance sin perder el ritmo.</p>
+            <button class="btn btn--primary hero__cta" id="btn-hero-registrarse">Empieza gratis</button>
+            <div class="hero__features">
+              <div class="hero__feature">
+                <img src="assets/img/feature-notify.svg" alt="" />
+                <span>Notificaciones</span>
+              </div>
+              <div class="hero__feature">
+                <img src="assets/img/feature-reminder.svg" alt="" />
+                <span>Recordatorios</span>
+              </div>
+              <div class="hero__feature">
+                <img src="assets/img/feature-priority.svg" alt="" />
+                <span>Prioridades</span>
+              </div>
+            </div>
+
+            <div class="hero__integrations">
+              <span class="hero__integrations-label">Se sincroniza con</span>
+              <div class="hero__integrations-icons">
+                <span class="integration-icon" title="Google Calendar">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="4" width="18" height="17" rx="2" fill="#fff" stroke="#DADCE0"/>
+                    <rect x="3" y="4" width="18" height="5" rx="2" fill="#4285F4"/>
+                    <rect x="7" y="2" width="2" height="4" rx="1" fill="#4285F4"/>
+                    <rect x="15" y="2" width="2" height="4" rx="1" fill="#4285F4"/>
+                    <rect x="6" y="12" width="4" height="4" fill="#34A853"/>
+                    <rect x="14" y="12" width="4" height="4" fill="#FBBC05"/>
+                  </svg>
+                </span>
+                <span class="integration-icon" title="Gmail">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="5" width="20" height="14" rx="2" fill="#fff" stroke="#DADCE0"/>
+                    <path d="M2 7v11a1 1 0 0 0 1 1h4V9z" fill="#EA4335"/>
+                    <path d="M22 7v11a1 1 0 0 1-1 1h-4V9z" fill="#EA4335"/>
+                    <path d="M2 6l10 7 10-7" fill="none" stroke="#EA4335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="integration-icon" title="Google Classroom">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1E8E3E"/>
+                    <path d="M12 6l8 4-8 4-8-4z" fill="#fff"/>
+                    <path d="M7 11.5V15c0 1.1 2.2 2 5 2s5-.9 5-2v-3.5" fill="none" stroke="#fff" stroke-width="1.3"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="hero__mockup">
+            <div class="mockup-frame">
+              <div class="mockup-frame__bar">
+                <span></span><span></span><span></span>
+                <span class="mockup-frame__badge">Vista previa</span>
+              </div>
+              <div class="mockup-frame__body">
+                <div class="mockup-stats">
+                  <div class="mockup-stat"><small>Tareas totales</small><strong>12</strong></div>
+                  <div class="mockup-stat"><small>Urgentes</small><strong>3</strong></div>
+                  <div class="mockup-stat"><small>Completadas</small><strong>5</strong></div>
+                </div>
+                <div class="mockup-tasks">
+                  <div class="mockup-task mockup-task--urgent">
+                    <span class="mockup-task__dot"></span>
+                    <span class="mockup-task__title">Entregar informe final</span>
+                    <span class="mockup-task__tag">Hoy</span>
+                  </div>
+                  <div class="mockup-task">
+                    <span class="mockup-task__dot"></span>
+                    <span class="mockup-task__title">Pagar servicios del mes</span>
+                    <span class="mockup-task__tag">2 días</span>
+                  </div>
+                  <div class="mockup-task mockup-task--done">
+                    <span class="mockup-task__dot"></span>
+                    <span class="mockup-task__title">Reunión con el equipo</span>
+                    <span class="mockup-task__tag">✓</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="home-panel" id="home-panel">
+        <div class="section-header">
+          <div>
+            <p class="section-label">CATEGORÍAS</p>
+            <h2>Filtra tu día</h2>
+          </div>
+          <div class="special-filters">
+            <select id="special-filter" class="select-filter">
+              <option value="todas">Todas</option>
+              <option value="especial:urgentes">Urgentes</option>
+              <option value="especial:tareas">Tareas</option>
+              <option value="especial:totales">Totales</option>
+              <option value="especial:completadas">Completadas hoy</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-row" id="filter-row"></div>
+      </div>
+
+      <div class="gate-prompt" id="gate-prompt">
+        <span class="gate-prompt__icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M8 11V7.5a4 4 0 0 1 8 0V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="12" cy="15.2" r="1.4" fill="currentColor"/>
+          </svg>
+        </span>
+        <h3>Inicia sesión para ver tus tareas</h3>
+        <p>Crea una cuenta gratis o inicia sesión para guardar tus tareas, activar recordatorios y ver tu panel de avance.</p>
+        <div class="gate-prompt__actions">
+          <button class="btn btn--primary" id="btn-gate-login">Iniciar sesión</button>
+          <button class="btn btn--ghost" id="btn-gate-registrarse">Registrarse</button>
+        </div>
+      </div>
+
+      <section class="how-to">
+        <div class="section-header">
+          <div>
+            <p class="section-label">PASO A PASO</p>
+            <h2>Empieza con TaskMaster</h2>
+          </div>
+        </div>
+        <div class="how-grid">
+          <article class="how-card">
+            <img src="assets/img/guide-1.svg" alt="Paso 1" />
+            <h3>Paso 1: Inicia sesión</h3>
+            <p>Regístrate o entra con Google para guardar tus tareas y seguir tu progreso.</p>
+          </article>
+          <article class="how-card">
+            <img src="assets/img/guide-2.svg" alt="Paso 2" />
+            <h3>Paso 2: Crea tu tarea</h3>
+            <p>Agrega título, fecha límite y prioridad. Usa la categoría para organizar mejor.</p>
+          </article>
+          <article class="how-card">
+            <img src="assets/img/guide-3.svg" alt="Paso 3" />
+            <h3>Paso 3: Sigue tu avance</h3>
+            <p>Revisa el tablero para ver carga por día, enfoque y avance por categoría.</p>
+          </article>
+        </div>
+      </section>
+
+      <div class="home-summary" id="home-summary">
+        <div class="home-summary__top">
+          <div class="summary-card">
+            <span class="summary-card__label">Carga semanal</span>
+            <span class="badge badge--success" id="carga-badge">Normal</span>
+          </div>
+          <div>
+            <button class="btn btn--ghost" id="btn-carga-semanal">Ver carga</button>
+          </div>
+        </div>
+        <div class="bar-chart" id="weekly-chart"></div>
+      </div>
+      <div class="task-section" id="task-section">
+        <div class="task-list" id="task-list"></div>
+      </div>
+
+      <section class="about-section">
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         <div class="section-header">
           <div>
             <p class="section-label">ACERCA DE</p>
@@ -201,13 +426,20 @@
       </section>
     </section>
 
+<<<<<<< HEAD
     <!-- ═══════════ PANTALLA 4 — VISTA SEMANAL / ESTADÍSTICAS ═══════════ -->
     <section id="view-semana" class="view">
       <div class="section-header">
+=======
+    <!-- Vista Resumen -->
+    <section id="view-overview" class="view">
+      <div class="dashboard-header">
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         <div>
           <p class="section-label">VISIÓN SEMANAL</p>
           <h2>Ritmo y carga</h2>
         </div>
+<<<<<<< HEAD
         <div class="semana-nav">
           <button class="btn btn--small btn--ghost" id="btn-semana-prev">←</button>
           <span id="semana-rango">Esta semana</span>
@@ -223,19 +455,35 @@
       </div>
 
       <div id="semana-stats-anchor" class="dashboard-grid">
+=======
+      </div>
+      <div class="dashboard-grid">
+        <div class="card dashboard-card">
+          <h3>📅 Carga por día</h3>
+          <div class="bar-chart" id="bar-chart"></div>
+        </div>
+        <div class="card dashboard-card">
+          <h3>🍅 Enfoque</h3>
+          <div class="pomodoro-stats" id="pomodoro-stats"></div>
+        </div>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         <div class="card dashboard-card">
           <h3>📈 Avance por categoría</h3>
           <div class="materia-progress" id="materia-progress"></div>
         </div>
+<<<<<<< HEAD
         <div class="card dashboard-card">
           <h3>🍅 Estadísticas</h3>
           <div class="pomodoro-stats" id="pomodoro-stats"></div>
         </div>
+=======
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
       </div>
     </section>
 
   </main>
 
+<<<<<<< HEAD
   <footer class="site-footer">
     <div class="footer-section">
       <h3>Acerca de TaskMaster</h3>
@@ -266,6 +514,9 @@
   </nav>
 
   <!-- ═══════════ PANTALLA 2 — MODAL NUEVA/EDITAR TAREA ═══════════ -->
+=======
+  <!-- Modal Nueva/Editar Tarea -->
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal modal--form" id="modal-tarea">
       <div class="modal__header">
@@ -277,11 +528,18 @@
       </div>
       <form class="modal__form" id="form-tarea" novalidate>
         <input type="hidden" id="tarea-id" value="" />
+<<<<<<< HEAD
 
         <div class="form-row grid-2">
           <label class="field">
             <span>Título</span>
             <input type="text" id="tarea-titulo" placeholder="Ej: Finalizar propuesta" required />
+=======
+        <div class="form-row grid-2">
+          <label class="field">
+            <span>Título</span>
+            <input type="text" id="tarea-titulo" placeholder="Ej: Entregar informe mañana 5pm #trabajo alta" required />
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
             <span class="form-error" id="error-titulo"></span>
           </label>
           <label class="field">
@@ -293,6 +551,7 @@
 
         <label class="field full-width">
           <span>Descripción</span>
+<<<<<<< HEAD
           <textarea id="tarea-descripcion" rows="3" placeholder="Describe la tarea... (opcional)"></textarea>
         </label>
 
@@ -309,6 +568,23 @@
               <button type="button" class="btn btn--small btn--primary" id="btn-crear-categoria">Crear</button>
             </div>
           </label>
+=======
+          <textarea id="tarea-descripcion" rows="4" placeholder="Describe la tarea... (opcional)"></textarea>
+        </label>
+
+        <div class="form-row grid-2">
+          <label class="field">
+            <span>Materia</span>
+            <select id="tarea-materia"></select>
+          </label>
+          <label class="field">
+            <span>Categoría</span>
+            <select id="tarea-general-categoria"></select>
+          </label>
+        </div>
+
+        <div class="form-row">
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
           <label class="field">
             <span>Prioridad</span>
             <div class="priority-buttons">
@@ -322,7 +598,11 @@
 
         <div class="form-row grid-2">
           <label class="field">
+<<<<<<< HEAD
             <span>Pomodoros estimados</span>
+=======
+            <span>Pomodoros</span>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
             <input type="range" id="tarea-pomodoros" min="1" max="10" value="2" />
             <div class="range-value"><span id="pomodoro-count">2</span> sesiones</div>
           </label>
@@ -353,17 +633,26 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- ═══════════ PANTALLA 5 — DETALLE DE TAREA ═══════════ -->
+=======
+  <!-- Modal Detalle/Pomodoro -->
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
   <div class="modal-overlay" id="modal-detalle-overlay">
     <div class="modal modal--detalle" id="modal-detalle">
       <div class="modal__header" id="detalle-header">
         <div>
           <span class="detalle-materia-badge" id="detalle-materia"></span>
           <h2 class="modal__title" id="detalle-titulo"></h2>
+<<<<<<< HEAD
+=======
+          <p class="detalle-subtitle" id="detalle-subtitle"></p>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         </div>
         <button class="modal__close" id="btn-cerrar-detalle">✕</button>
       </div>
       <div class="detalle-body">
+<<<<<<< HEAD
         <div class="detalle-urgencia-banner" id="detalle-urgencia-banner">
           <span id="detalle-fecha"></span>
         </div>
@@ -386,6 +675,32 @@
 
         <div class="detalle-actions">
           <button class="btn btn--pomodoro" id="btn-iniciar-enfoque">🍅 Iniciar Sesión de Enfoque</button>
+=======
+        <p class="detalle-desc" id="detalle-desc"></p>
+        <div class="detalle-meta-grid">
+          <div class="detalle-meta-card"><strong>Fecha límite</strong><span id="detalle-fecha"></span></div>
+          <div class="detalle-meta-card"><strong>Prioridad</strong><span id="detalle-prioridad"></span></div>
+          <div class="detalle-meta-card"><strong>Recordatorio</strong><span id="detalle-recordatorio"></span></div>
+          <div class="detalle-meta-card"><strong>Progreso</strong><span id="detalle-progreso"></span></div>
+        </div>
+        <div class="pomodoro-section">
+          <div class="pomodoro-ring">
+            <svg class="pomodoro-svg" viewBox="0 0 120 120">
+              <circle class="ring-bg"       cx="60" cy="60" r="50" />
+              <circle class="ring-progress"  cx="60" cy="60" r="50" id="ring-progress" />
+            </svg>
+            <div class="pomodoro-center">
+              <span class="pomodoro-time"  id="pomodoro-time">25:00</span>
+              <span class="pomodoro-label" id="pomodoro-label">Listo</span>
+            </div>
+          </div>
+          <div class="pomodoro-controls">
+            <button class="pom-btn" id="btn-pom-reset">↺</button>
+            <button class="pom-btn pom-btn--main" id="btn-pom-toggle">▶</button>
+            <button class="pom-btn" id="btn-pom-skip">⏭</button>
+          </div>
+          <div class="pomodoro-sessions" id="pomodoro-sessions"></div>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         </div>
         <div class="detalle-actions detalle-actions--split">
           <button class="btn btn--success" id="btn-completar">✓ Completar</button>
@@ -398,6 +713,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- ═══════════ PANTALLA 3 — MODO ENFOQUE POMODORO (fullscreen) ═══════════ -->
   <div class="pomodoro-fullscreen" id="pomodoro-fullscreen">
     <button class="pomodoro-fs-close" id="btn-pomodoro-fs-close">✕</button>
@@ -436,11 +752,39 @@
         <div>
           <p class="modal-label" id="auth-mode-label">Cuenta</p>
           <h2 class="modal__title" id="auth-title">Iniciar sesión</h2>
+=======
+  <button class="fab" id="btn-fab-nueva-tarea" title="Nueva tarea">+</button>
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Modal Auth (login/register) -->
+  <div class="modal-overlay" id="modal-auth-overlay">
+    <div class="modal modal--form" id="modal-auth">
+      <img src="assets/img/auth-hero.jpg" alt="Organiza tu día" class="modal__hero" />
+      <div class="modal__header">
+        <div>
+          <p class="modal-label" id="auth-mode-label">Cuenta</p>
+          <h2 class="modal__title" id="auth-title">Iniciar sesión / Registrar</h2>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
         </div>
         <button class="modal__close" id="btn-cerrar-auth">✕</button>
       </div>
       <form class="modal__form" id="form-auth" novalidate>
+<<<<<<< HEAD
         <div class="form-row">
+=======
+        <p class="auth-note" id="auth-google-note" style="display:none;">
+          <span class="google-icon">
+            <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+            </svg>
+          </span>
+          Simulación de acceso con Google — solo necesitamos tu correo.
+        </p>
+        <div class="form-row" id="row-nombre">
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
           <label class="field">
             <span>Nombre</span>
             <input type="text" id="auth-nombre" placeholder="Tu nombre (para registro)" />
@@ -452,7 +796,11 @@
             <input type="email" id="auth-email" placeholder="email@ejemplo.com" required />
           </label>
         </div>
+<<<<<<< HEAD
         <div class="form-row">
+=======
+        <div class="form-row" id="row-password">
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
           <label class="field">
             <span>Contraseña</span>
             <input type="password" id="auth-password" placeholder="Contraseña" required />
@@ -462,6 +810,7 @@
           <button type="button" class="btn btn--ghost" id="btn-switch-auth">Cambiar a Registrar</button>
           <button type="submit" class="btn btn--primary" id="btn-auth-submit">Continuar</button>
         </div>
+<<<<<<< HEAD
         <div class="social-login">
           <button type="button" class="btn btn--social" id="btn-modal-google">
             <span class="google-icon">
@@ -470,11 +819,22 @@
                 <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
                 <path fill="#FBBC05" d="M11.69 28.18A13.97 13.97 0 0 1 10.94 24c0-1.45.25-2.86.75-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/>
                 <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+=======
+        <div class="social-login" id="row-social-login">
+          <button type="button" class="btn btn--social" id="btn-modal-google">
+            <span class="google-icon">
+              <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
               </svg>
             </span>
             Iniciar sesión con Google
           </button>
         </div>
+<<<<<<< HEAD
 
         <div class="sync-apps">
           <p class="sync-apps__label">Se sincroniza con</p>
@@ -485,10 +845,13 @@
             <span title="OneDrive">☁️</span>
           </div>
         </div>
+=======
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
       </form>
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- Modal Perfil / Mi cuenta -->
   <div class="modal-overlay" id="modal-perfil-overlay">
     <div class="modal modal--form" id="modal-perfil">
@@ -547,9 +910,22 @@
   <script src="assets/js/viewmodel/TaskViewModel.js"></script>
   <script src="assets/js/view/HomeView.js"></script>
   <script src="assets/js/view/SemanaView.js"></script>
+=======
+  <!-- Scripts en orden MVVM: Model → ViewModel → View → App -->
+  <script src="assets/js/model/TaskModel.js"></script>
+  <script src="assets/js/model/MateriaModel.js"></script>
+  <script src="assets/js/model/QuickAddParser.js"></script>
+  <script src="assets/js/viewmodel/TaskViewModel.js"></script>
+  <script src="assets/js/view/HomeView.js"></script>
+  <script src="assets/js/view/DashboardView.js"></script>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
   <script src="assets/js/view/ModalView.js"></script>
   <script src="assets/js/view/PomodoroView.js"></script>
   <script src="assets/js/view/AuthView.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50

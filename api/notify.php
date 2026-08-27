@@ -25,12 +25,16 @@ $headers = "From: no-reply@taskmaster.local\r\n" .
            "Reply-To: no-reply@taskmaster.local\r\n" .
            "Content-type: text/plain; charset=utf-8\r\n";
 
+<<<<<<< HEAD
 $sent = false;
 try {
     $sent = mail($email, $asunto, $mensaje, $headers);
 } catch (Exception $e) {
     $sent = false;
 }
+=======
+$sent = @mail($email, $asunto, $mensaje, $headers);
+>>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
 
 if ($sent) {
     echo json_encode(['success' => true]);
