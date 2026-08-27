@@ -63,6 +63,7 @@ class App {
     const headerSum  = document.querySelector('.header-summary');
     const nivelCard  = document.getElementById('nivel-card');
     const btnHero    = document.getElementById('btn-nueva-tarea');
+    const btnFab     = document.getElementById('btn-fab-nueva-tarea');
 
     if (homeCta)    homeCta.classList.toggle('open', activo);
     if (sectionHdr) sectionHdr.style.display = activo ? 'none' : '';
@@ -70,6 +71,7 @@ class App {
     if (taskSec)    taskSec.style.display    = activo ? 'none' : '';
     if (headerSum)  headerSum.style.display  = activo ? 'none' : '';
     if (btnHero)    btnHero.textContent      = activo ? '🚀 Comenzar gratis' : '+ Nueva tarea';
+    if (btnFab)     btnFab.style.display     = activo ? 'none' : '';
 
     if (activo && nivelCard) {
       nivelCard.innerHTML = `
