@@ -19,8 +19,8 @@ class HomeView {
 
   // ── Nivel por constancia + racha (gamificación) ───────────────────────────
 
-  renderNivel() {
-    if (!this.$nivelCard) return;
+  renderNivel(contenedor = this.$nivelCard) {
+    if (!contenedor) return;
     const nivel = this._vm.getNivelUsuario();
     const racha = this._vm.getRacha();
 
@@ -28,7 +28,7 @@ class HomeView {
       ? `${nivel.faltan} tarea${nivel.faltan === 1 ? '' : 's'} más para <strong>${nivel.siguiente}</strong>`
       : 'Nivel máximo alcanzado';
 
-    this.$nivelCard.innerHTML = `
+    contenedor.innerHTML = `
       <div class="nivel-card__icon">${nivel.icono}</div>
       <div class="nivel-card__body">
         <div class="nivel-card__top">

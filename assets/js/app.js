@@ -196,9 +196,21 @@ class App {
     const btnAccount = document.getElementById('btn-account');
     if (btnAccount) btnAccount.addEventListener('click', () => {
       if (this.user) {
-        if (confirm('¿Cerrar sesión?')) this.authView.logout();
+        this.mostrarPerfil();
       } else {
         this.authView.openMode('login');
+      }
+    });
+
+    const btnCerrarPerfil = document.getElementById('btn-cerrar-perfil');
+    if (btnCerrarPerfil) btnCerrarPerfil.addEventListener('click', () => this._cerrarPerfil());
+    const perfilOverlay = document.getElementById('modal-perfil-overlay');
+    if (perfilOverlay) perfilOverlay.addEventListener('click', e => { if (e.target === perfilOverlay) this._cerrarPerfil(); });
+    const btnPerfilLogout = document.getElementById('btn-perfil-logout');
+    if (btnPerfilLogout) btnPerfilLogout.addEventListener('click', () => {
+      if (confirm('¿Cerrar sesión?')) {
+        this._cerrarPerfil();
+        this.authView.logout();
       }
     });
 
@@ -212,6 +224,7 @@ class App {
         this.modalView.cerrar();
         this.modalView.cerrarDetalle();
         this.pomodoroView.detener();
+        this._cerrarPerfil();
       }
     });
   }
@@ -230,6 +243,39 @@ class App {
     this.user = user;
     const label = document.getElementById('btn-account-label');
     if (label) label.textContent = user && user.nombre ? user.nombre : 'Iniciar sesión';
+  }
+
+  // ── Mi perfil: datos de la cuenta y lo que el usuario ha modificado ────────
+
+  mostrarPerfil() {
+    if (!this.user) return;
+    const tareas = taskViewModel.getTareas();
+    const completadas = tareas.filter(t => t.completada).length;
+    const pomodoros = tareas.reduce((s, t) => s + (t.pomodoros_real || 0), 0);
+
+    const avatar = document.getElementById('perfil-avatar');
+    if (avatar) avatar.textContent = (this.user.nombre || this.user.email || '?').charAt(0);
+    const nombre = document.getElementById('perfil-nombre');
+    if (nombre) nombre.textContent = this.user.nombre || 'Sin nombre';
+    const email = document.getElementById('perfil-email');
+    if (email) email.textContent = this.user.email || '';
+
+    const creadasEl = document.getElementById('perfil-creadas');
+    if (creadasEl) creadasEl.textContent = tareas.length;
+    const completadasEl = document.getElementById('perfil-completadas');
+    if (completadasEl) completadasEl.textContent = completadas;
+    const pomodorosEl = document.getElementById('perfil-pomodoros');
+    if (pomodorosEl) pomodorosEl.textContent = pomodoros;
+    const rachaEl = document.getElementById('perfil-racha');
+    if (rachaEl) rachaEl.textContent = taskViewModel.getRacha();
+
+    this.homeView.renderNivel(document.getElementById('perfil-nivel'));
+
+    document.getElementById('modal-perfil-overlay').classList.add('open');
+  }
+
+  _cerrarPerfil() {
+    document.getElementById('modal-perfil-overlay').classList.remove('open');
   }
 
   // ── Notificaciones del navegador (HU-04, sin cuenta requerida) ─────────────

@@ -411,6 +411,52 @@
     </div>
   </div>
 
+  <!-- Modal Perfil / Mi cuenta -->
+  <div class="modal-overlay" id="modal-perfil-overlay">
+    <div class="modal modal--form" id="modal-perfil">
+      <div class="modal__header">
+        <div>
+          <p class="modal-label">Cuenta</p>
+          <h2 class="modal__title">Mi perfil</h2>
+        </div>
+        <button class="modal__close" id="btn-cerrar-perfil">✕</button>
+      </div>
+
+      <div class="perfil-body">
+        <div class="perfil-avatar" id="perfil-avatar">?</div>
+        <div class="perfil-datos">
+          <h3 id="perfil-nombre">—</h3>
+          <p id="perfil-email">—</p>
+        </div>
+      </div>
+
+      <div class="perfil-stats">
+        <div class="perfil-stat">
+          <strong id="perfil-creadas">0</strong>
+          <span>Tareas creadas</span>
+        </div>
+        <div class="perfil-stat">
+          <strong id="perfil-completadas">0</strong>
+          <span>Completadas</span>
+        </div>
+        <div class="perfil-stat">
+          <strong id="perfil-pomodoros">0</strong>
+          <span>Pomodoros</span>
+        </div>
+        <div class="perfil-stat">
+          <strong id="perfil-racha">0</strong>
+          <span>Racha (días)</span>
+        </div>
+      </div>
+
+      <div class="perfil-nivel" id="perfil-nivel"></div>
+
+      <div class="modal__actions">
+        <button type="button" class="btn btn--danger" id="btn-perfil-logout">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+
   <button class="fab" id="btn-fab-nueva-tarea" title="Nueva tarea">+</button>
   <div class="toast-container" id="toast-container"></div>
 
