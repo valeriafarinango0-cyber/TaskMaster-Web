@@ -14,6 +14,30 @@ class HomeView {
     this.$statTotal  = document.getElementById('stat-total');
     this.$statUrgent = document.getElementById('stat-urgent');
     this.$statDone   = document.getElementById('stat-done');
+    this.$nivelCard  = document.getElementById('nivel-card');
+  }
+
+  // ── Nivel por constancia + racha (gamificación) ───────────────────────────
+
+  renderNivel() {
+    if (!this.$nivelCard) return;
+    const nivel = this._vm.getNivelUsuario();
+    const racha = this._vm.getRacha();
+
+    const siguienteTxt = nivel.siguiente
+      ? `${nivel.faltan} tarea${nivel.faltan === 1 ? '' : 's'} más para <strong>${nivel.siguiente}</strong>`
+      : 'Nivel máximo alcanzado';
+
+    this.$nivelCard.innerHTML = `
+      <div class="nivel-card__icon">${nivel.icono}</div>
+      <div class="nivel-card__body">
+        <div class="nivel-card__top">
+          <span class="nivel-card__nombre">${nivel.nombre}</span>
+          <span class="nivel-card__racha">🔥 ${racha} día${racha === 1 ? '' : 's'} seguido${racha === 1 ? '' : 's'}</span>
+        </div>
+        <div class="nivel-card__bar"><div class="nivel-card__bar-fill" style="width:${nivel.progreso}%"></div></div>
+        <p class="nivel-card__siguiente">${siguienteTxt}</p>
+      </div>`;
   }
 
   // ── Chips de filtro (estado + categorías propias) ─────────────────────────
@@ -140,6 +164,7 @@ class HomeView {
 
   render() {
     this._renderHeaderStats();
+    this.renderNivel();
     this.renderFiltros();
     this.renderTareas();
   }

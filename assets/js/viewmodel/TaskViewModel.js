@@ -226,6 +226,44 @@ class TaskViewModel {
     return racha;
   }
 
+  getRacha() { return this._calcularRacha(); }
+
+  // ── Gamificación: nivel por constancia (autocontrol / disciplina) ────────
+  // Se calcula del lado del cliente a partir de tareas completadas — sin
+  // tabla nueva en la base de datos.
+
+  static NIVELES = [
+    { min: 0,   nombre: 'Aprendiz',                  icono: '🌱' },
+    { min: 5,   nombre: 'Constante',                 icono: '🔥' },
+    { min: 15,  nombre: 'Disciplinado',               icono: '⚡' },
+    { min: 30,  nombre: 'Enfocado',                   icono: '🎯' },
+    { min: 50,  nombre: 'Maestro del Enfoque',        icono: '👑' },
+    { min: 100, nombre: 'Leyenda de la Productividad', icono: '🏆' },
+  ];
+
+  getNivelUsuario() {
+    const completadas = this._state.tareas.filter(t => t.completada).length;
+    const niveles = TaskViewModel.NIVELES;
+    let idx = 0;
+    for (let i = 0; i < niveles.length; i++) {
+      if (completadas >= niveles[i].min) idx = i;
+    }
+    const actual = niveles[idx];
+    const siguiente = niveles[idx + 1] || null;
+    const progreso = siguiente
+      ? Math.round(((completadas - actual.min) / (siguiente.min - actual.min)) * 100)
+      : 100;
+
+    return {
+      nombre: actual.nombre,
+      icono: actual.icono,
+      completadas,
+      siguiente: siguiente ? siguiente.nombre : null,
+      faltan: siguiente ? siguiente.min - completadas : 0,
+      progreso: Math.min(100, Math.max(0, progreso)),
+    };
+  }
+
   // ── Utilidades de presentación (cálculos sin DOM) ─────────────────────────
 
   etiquetaFecha(fechaLimite)     { return this._model.etiquetaFecha(fechaLimite); }

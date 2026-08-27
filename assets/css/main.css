@@ -215,6 +215,79 @@ img {
   margin-top: 24px;
 }
 
+/* ── NIVEL / RACHA (gamificación) ──────────────────────────────────────── */
+
+.nivel-card {
+  margin-top: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(120deg, rgba(0, 201, 255, 0.1), rgba(146, 254, 157, 0.06));
+  border: 1px solid rgba(0, 201, 255, 0.18);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nivel-card:empty { display: none; }
+
+.nivel-card__icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.nivel-card__body { flex: 1; min-width: 0; }
+
+.nivel-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.nivel-card__nombre {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.nivel-card__racha {
+  font-size: 12px;
+  color: var(--medio);
+  font-weight: 600;
+}
+
+.nivel-card__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.nivel-card__bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.nivel-card__siguiente {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.nivel-card__siguiente strong {
+  color: var(--text);
+}
+
 .stat-card {
   padding: 18px;
   border-radius: var(--radius-lg);
