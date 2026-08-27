@@ -359,3 +359,12 @@ class App {
 }
 
 document.addEventListener('DOMContentLoaded', () => { window.app = new App(); });
+
+// PWA: registrar el service worker (habilita instalar la app y el modo offline)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => {
+      console.warn('No se pudo registrar el service worker:', err);
+    });
+  });
+}

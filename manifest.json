@@ -1,0 +1,16 @@
+{
+  "name": "TaskMaster - Organiza tu día",
+  "short_name": "TaskMaster",
+  "description": "Gestor de tareas universal con categorías personalizadas, enfoque Pomodoro, niveles y rachas.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0A0F1E",
+  "theme_color": "#0A0F1E",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "icons": [
+    { "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
