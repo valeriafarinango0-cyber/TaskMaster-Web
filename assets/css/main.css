@@ -220,6 +220,24 @@ img {
   padding: 15px 28px;
 }
 
+.hero__features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+
+.hero__feature {
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .hero-sync {
   margin-top: 26px;
   display: flex;
@@ -543,6 +561,46 @@ img {
   height: 8px;
   border-radius: 999px;
   display: inline-block;
+}
+
+/* ── CTA DE INVITADO (sin sesión) ───────────────────────────────────────── */
+
+.home-cta {
+  display: none;
+  text-align: center;
+  padding: 40px 28px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, rgba(0, 201, 255, 0.08), rgba(146, 254, 157, 0.04));
+  border: 1px solid rgba(0, 201, 255, 0.16);
+  margin-bottom: 28px;
+  animation: card-in 0.4s ease both;
+}
+
+.home-cta.open { display: block; }
+
+.home-cta__icon {
+  font-size: 34px;
+  margin-bottom: 12px;
+}
+
+.home-cta h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.home-cta p {
+  margin: 0 auto 22px;
+  max-width: 440px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.home-cta__actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* ── TARJETAS DE TAREA ──────────────────────────────────────────────────── */
@@ -959,13 +1017,6 @@ img {
   display: flex;
 }
 
-/* Login obligatorio: fondo solido (no se ve ni se puede interactuar con el
-   panel de atras), z-index por encima de cualquier otro modal. */
-.modal-overlay--gate {
-  background: var(--bg);
-  backdrop-filter: none;
-  z-index: 200;
-}
 
 .sync-apps {
   margin-top: 22px;
@@ -1603,9 +1654,9 @@ img {
   transform: translateX(-50%);
   display: grid;
   gap: 12px;
-  /* Por encima del modal de login obligatorio (.modal-overlay--gate, z-index 200)
-     para que los errores de acceso (email/contraseña incorrectos) se vean. */
-  z-index: 210;
+  /* Por encima de cualquier modal abierto (.modal-overlay, z-index 40) para que
+     los errores de acceso (email/contraseña incorrectos) se vean. */
+  z-index: 50;
   width: min(360px, calc(100% - 32px));
 }
 

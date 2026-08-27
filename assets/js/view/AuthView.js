@@ -13,7 +13,6 @@ class AuthView {
     this.$submit = document.getElementById('btn-auth-submit');
 
     this.mode = 'login'; // or 'register'
-    this._gateMode = false; // true mientras no hay sesión: el modal no se puede cerrar
 
     this._bind();
   }
@@ -38,23 +37,6 @@ class AuthView {
     this.$btnSwitch.textContent = this.mode === 'login' ? 'Cambiar a Registrar' : 'Cambiar a Iniciar sesión';
     this.$nombre.style.display = this.mode === 'login' ? 'none' : 'block';
     this.open();
-  }
-
-  /**
-   * Login obligatorio: bloquea el panel por completo (fondo sólido, sin botón
-   * de cerrar, sin cerrar con click afuera ni Escape) hasta iniciar sesión.
-   */
-  abrirGate() {
-    this._gateMode = true;
-    this.$overlay.classList.add('modal-overlay--gate');
-    this.$btnClose.style.display = 'none';
-    this.openMode('login');
-  }
-
-  _salirDeGate() {
-    this._gateMode = false;
-    this.$overlay.classList.remove('modal-overlay--gate');
-    this.$btnClose.style.display = '';
   }
 
   /** Simula login con proveedor (Google). En producción usar OAuth. */
@@ -91,7 +73,6 @@ class AuthView {
   }
 
   close() {
-    if (this._gateMode) return; // no se puede cerrar sin iniciar sesión
     this.$overlay.classList.remove('open');
   }
 
@@ -130,20 +111,13 @@ class AuthView {
     }
   }
 
-  /** Ruta común tras un login/registro/Google exitoso, venga de gate o del modal normal. */
+  /** Ruta común tras un login/registro/Google exitoso. */
   async _onAuthSuccess(user, mensaje) {
-    const veniaDeGate = this._gateMode;
-    if (veniaDeGate) this._salirDeGate();
     this.app.setUser(user);
     this.$form.reset();
     this.close();
     this.app.showToast(mensaje, 'success');
-    if (veniaDeGate) {
-      await this.app.onAuthenticated();
-    } else if (window.taskViewModel) {
-      await window.taskViewModel.cargarTodo();
-      if (this.app.homeView) this.app.homeView.render();
-    }
+    await this.app.onAuthenticated();
   }
 
   _restoreUser() {
@@ -154,11 +128,12 @@ class AuthView {
     return false;
   }
 
-  /** Cierra sesión: vuelve a exigir login (el panel se bloquea de nuevo). */
+  /** Cierra sesión: vuelve a la landing pública en modo invitado. */
   logout() {
     localStorage.removeItem('tm_user');
     this.app.setUser(null);
-    this.abrirGate();
+    this.app.mostrarModoInvitado();
+    this.app.showToast('Sesión cerrada', 'info');
   }
 }
 

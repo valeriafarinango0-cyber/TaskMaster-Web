@@ -25,28 +25,60 @@ class App {
   }
 
   // ── Carga inicial ─────────────────────────────────────────────────────────
-  // Login obligatorio: si no hay sesión guardada, el panel queda bloqueado
-  // detrás del modal de acceso (AuthView.abrirGate) y no se cargan tareas
-  // hasta que el usuario inicie sesión o se registre.
+  // La landing (hero, "Acerca de", contacto) siempre es pública. Solo el panel
+  // de tareas requiere sesión: sin ella se muestra un llamado a crear cuenta
+  // en lugar de la lista de tareas (mostrarModoInvitado).
 
   async _iniciar() {
     const haySesion = this.authView._restoreUser();
-    if (!haySesion) {
-      this.authView.abrirGate();
-      return;
+    if (haySesion) {
+      await this._cargarPanel();
+    } else {
+      this.mostrarModoInvitado();
     }
-    await this._cargarPanel();
   }
 
-  /** Se llama desde AuthView tras un login/registro exitoso durante el gate. */
+  /** Se llama desde AuthView tras un login/registro/Google exitoso. */
   async onAuthenticated() {
     await this._cargarPanel();
   }
 
   async _cargarPanel() {
+    this._setUiInvitado(false);
     await taskViewModel.cargarTodo();
     this.homeView.render();
     this._iniciarSyncTiempoReal();
+  }
+
+  /** Estado público sin sesión: oculta datos personales y muestra el CTA de registro. */
+  mostrarModoInvitado() {
+    this._setUiInvitado(true);
+  }
+
+  _setUiInvitado(activo) {
+    const homeCta    = document.getElementById('home-cta');
+    const sectionHdr = document.getElementById('home-section-header');
+    const filterRow  = document.getElementById('filter-row');
+    const taskSec    = document.querySelector('.task-section');
+    const headerSum  = document.querySelector('.header-summary');
+    const nivelCard  = document.getElementById('nivel-card');
+    const btnHero    = document.getElementById('btn-nueva-tarea');
+
+    if (homeCta)    homeCta.classList.toggle('open', activo);
+    if (sectionHdr) sectionHdr.style.display = activo ? 'none' : '';
+    if (filterRow)  filterRow.style.display  = activo ? 'none' : '';
+    if (taskSec)    taskSec.style.display    = activo ? 'none' : '';
+    if (headerSum)  headerSum.style.display  = activo ? 'none' : '';
+    if (btnHero)    btnHero.textContent      = activo ? '🚀 Comenzar gratis' : '+ Nueva tarea';
+
+    if (activo && nivelCard) {
+      nivelCard.innerHTML = `
+        <div class="nivel-card__icon">🏆</div>
+        <div class="nivel-card__body">
+          <div class="nivel-card__top"><span class="nivel-card__nombre">Niveles y rachas</span></div>
+          <p class="nivel-card__siguiente">Crea una cuenta para empezar a subir de nivel con cada tarea que completes.</p>
+        </div>`;
+    }
   }
 
   // ── Sincronización en tiempo real (Firestore, opcional) ─────────────────────
@@ -177,6 +209,11 @@ class App {
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const vista = btn.dataset.view;
+        if (vista === 'semana' && !this.user) {
+          this.showToast('Inicia sesión para ver tu progreso semanal', 'info');
+          this.authView.openMode('login');
+          return;
+        }
         this._cambiarVista(vista);
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -197,10 +234,21 @@ class App {
     });
 
     const btnNew = document.getElementById('btn-nueva-tarea');
-    if (btnNew) btnNew.addEventListener('click', () => this.modalView.abrirNueva());
+    if (btnNew) btnNew.addEventListener('click', () => {
+      if (this.user) this.modalView.abrirNueva();
+      else this.authView.openMode('register');
+    });
 
     const btnFab = document.getElementById('btn-fab-nueva-tarea');
-    if (btnFab) btnFab.addEventListener('click', () => this.modalView.abrirNueva());
+    if (btnFab) btnFab.addEventListener('click', () => {
+      if (this.user) this.modalView.abrirNueva();
+      else this.authView.openMode('register');
+    });
+
+    const btnCtaRegistro = document.getElementById('btn-cta-registro');
+    if (btnCtaRegistro) btnCtaRegistro.addEventListener('click', () => this.authView.openMode('register'));
+    const btnCtaLogin = document.getElementById('btn-cta-login');
+    if (btnCtaLogin) btnCtaLogin.addEventListener('click', () => this.authView.openMode('login'));
 
     const btnAccount = document.getElementById('btn-account');
     if (btnAccount) btnAccount.addEventListener('click', () => {
