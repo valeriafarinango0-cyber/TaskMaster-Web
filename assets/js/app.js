@@ -187,6 +187,15 @@ class App {
       });
     });
 
+    const linkAcercaDe = document.querySelector('a.top-nav__link[href="#acerca-de"]');
+    if (linkAcercaDe) linkAcercaDe.addEventListener('click', e => {
+      e.preventDefault();
+      this._cambiarVista('home');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'home'));
+      const el = document.getElementById('acerca-de');
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+    });
+
     const btnNew = document.getElementById('btn-nueva-tarea');
     if (btnNew) btnNew.addEventListener('click', () => this.modalView.abrirNueva());
 
@@ -294,7 +303,10 @@ class App {
     toast.className = `toast toast--${tipo}`;
     toast.textContent = mensaje;
     container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+    setTimeout(() => {
+      toast.classList.add('toast--leaving');
+      setTimeout(() => toast.remove(), 250);
+    }, 3000);
   }
 }
 
