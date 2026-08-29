@@ -1,7 +1,6 @@
 <?php
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
-<<<<<<< HEAD
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
@@ -150,27 +149,4 @@ else {
 
 $conexion->close();
 ?>
-=======
 
-include("../config/conexion.php");
-
-$exists = $conexion->query("SHOW TABLES LIKE 'categorias'");
-$categorias = [];
-if ($exists && $exists->num_rows > 0) {
-	$res = $conexion->query("SELECT * FROM categorias ORDER BY id ASC");
-	while ($f = $res->fetch_assoc()) $categorias[] = $f;
-} else {
-	// fallback: categorías estáticas
-	$categorias = [
-		["id" => 1, "nombre" => "Personal"],
-		["id" => 2, "nombre" => "Academico"],
-		["id" => 3, "nombre" => "Trabajo"]
-	];
-}
-
-echo json_encode(["success" => true, "categorias" => $categorias]);
-
-$conexion->close();
-?>
-
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50

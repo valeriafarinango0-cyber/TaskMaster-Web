@@ -1,16 +1,10 @@
 node_modules/
 .env
-<<<<<<< HEAD
 .env.*
 !.env.example
-*.firebase-adminsdk*.json
+*firebase-adminsdk*.json
 *-adminsdk-*.json
 .vscode/
 notify.log
 serviceAccountKey.json
 *.serviceAccountKey.json
-=======
-serviceAccountKey.json
-*firebase-adminsdk*.json
-notify.log
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50

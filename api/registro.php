@@ -64,8 +64,5 @@ $_SESSION['user_id'] = $userId;
 
 echo json_encode(["success" => true, "user" => ["id" => $userId, "nombre" => $nombre, "email" => $email]]);
 $conexion->close();
-<<<<<<< HEAD
 ?>
-=======
-?>
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
+

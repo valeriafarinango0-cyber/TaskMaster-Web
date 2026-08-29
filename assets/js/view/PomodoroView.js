@@ -1,12 +1,7 @@
 /**
  * CAPA VIEW — PomodoroView.js
-<<<<<<< HEAD
  * Pantalla 3: Modo Enfoque Pomodoro a pantalla completa.
  * Temporizador circular de 25 minutos por tarea, con registro de sesiones.
-=======
- * Controla el temporizador Pomodoro integrado en el modal de detalle.
- * Solo manipula el DOM del timer. No guarda estado de negocio.
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
  */
 
 class PomodoroView {
@@ -14,7 +9,6 @@ class PomodoroView {
   constructor(viewModel) {
     this._vm = viewModel;
 
-<<<<<<< HEAD
     this.$overlay  = document.getElementById('pomodoro-fullscreen');
     this.$subtitle = document.getElementById('pomodoro-fs-tarea');
     this.$time     = document.getElementById('fs-pomodoro-time');
@@ -37,61 +31,18 @@ class PomodoroView {
     this._tareaTitulo  = '';
 
     this._circunf = 2 * Math.PI * 170;
-=======
-    // DOM
-    this.$time     = document.getElementById('pomodoro-time');
-    this.$label    = document.getElementById('pomodoro-label');
-    this.$ring     = document.getElementById('ring-progress');
-    this.$sessions = document.getElementById('pomodoro-sessions');
-    this.$btnToggle= document.getElementById('btn-pom-toggle');
-    this.$btnReset = document.getElementById('btn-pom-reset');
-    this.$btnSkip  = document.getElementById('btn-pom-skip');
-
-    // Estado interno del timer
-    this._duracion   = 25 * 60; // 25 min en segundos
-    this._duracionActual = this._duracion; // duración de la fase en curso (enfoque o descanso)
-    this._restantes  = this._duracion;
-    this._intervalo  = null;
-    this._corriendo  = false;
-    this._sesionAct  = 0;
-    this._sesionTotal= 1;
-    this._tareaId    = null;
-
-    // Circunferencia del anillo SVG (r=50 → 2πr ≈ 314)
-    this._circunf = 2 * Math.PI * 50;
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
     this.$ring.style.strokeDasharray = this._circunf;
 
     this._bindEvents();
   }
 
-<<<<<<< HEAD
   _bindEvents() {
     this.$btnClose.addEventListener('click', () => this.detener());
     this.$btnToggle.addEventListener('click', () => this._corriendo ? this._pausar() : this._iniciarConteo());
-=======
-  // ── Inicializar para una tarea específica ─────────────────────────────────
-
-  iniciar(tarea) {
-    this._tareaId    = tarea.id;
-    this._sesionAct  = tarea.pomodoros_real || 0;
-    this._sesionTotal= tarea.pomodoros_est  || 1;
-    this.reset();
-    this._renderSessions();
-  }
-
-  // ── Eventos de botones ────────────────────────────────────────────────────
-
-  _bindEvents() {
-    this.$btnToggle.addEventListener('click', () => {
-      this._corriendo ? this._pausar() : this._iniciarConteo();
-    });
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
     this.$btnReset.addEventListener('click',  () => this.reset());
     this.$btnSkip.addEventListener('click',   () => this._completarSesion());
   }
 
-<<<<<<< HEAD
   // ── Abrir pantalla de enfoque para una tarea ───────────────────────────────
 
   iniciar(tarea) {
@@ -103,9 +54,6 @@ class PomodoroView {
     this._renderStats(tarea);
     this.$overlay.classList.add('open');
   }
-=======
-  // ── Control del timer ─────────────────────────────────────────────────────
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
 
   _iniciarConteo() {
     if (this._restantes <= 0) this.reset();
@@ -134,14 +82,8 @@ class PomodoroView {
 
   reset() {
     clearInterval(this._intervalo);
-<<<<<<< HEAD
     this._corriendo = false;
     this._restantes = this._duracion;
-=======
-    this._corriendo  = false;
-    this._duracionActual = this._duracion;
-    this._restantes  = this._duracion;
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
     this.$btnToggle.textContent = '▶';
     this.$btnToggle.classList.remove('running');
     this.$label.textContent = 'Listo';
@@ -153,7 +95,6 @@ class PomodoroView {
     this._corriendo = false;
     this.$btnToggle.classList.remove('running');
 
-<<<<<<< HEAD
     if (this._tareaId) {
       await this._vm.registrarPomodoro(this._tareaId);
       this._incrementarContadorHoy();
@@ -171,35 +112,11 @@ class PomodoroView {
     if (window.app) app.showToast('¡Pomodoro completado! 🍅 Toma un descanso.', 'success');
   }
 
-=======
-    // Registrar en el ViewModel
-    if (this._tareaId) {
-      await this._vm.registrarPomodoro(this._tareaId);
-      this._sesionAct++;
-    }
-
-    // Notificación del navegador
-    this._notificar('🍅 ¡Sesión completada!', 'Toma un descanso de 5 minutos.');
-
-    // Mostrar descanso
-    this._duracionActual = 5 * 60;
-    this._restantes = this._duracionActual;
-    this.$label.textContent = '☕ Descanso';
-    this.$btnToggle.textContent = '▶';
-    this._actualizarUI();
-    this._renderSessions();
-    app.showToast('¡Pomodoro completado! 🍅 Toma un descanso.', 'success');
-  }
-
-  // ── Actualizar UI del timer ───────────────────────────────────────────────
-
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
   _actualizarUI() {
     const min = Math.floor(this._restantes / 60).toString().padStart(2, '0');
     const seg = (this._restantes % 60).toString().padStart(2, '0');
     this.$time.textContent = `${min}:${seg}`;
 
-<<<<<<< HEAD
     const progreso = this._restantes / this._duracion;
     const offset   = this._circunf * (1 - progreso);
     this.$ring.style.strokeDashoffset = offset;
@@ -214,33 +131,11 @@ class PomodoroView {
       let cls = 'session-dot';
       if (i < hechas)        cls += ' done';
       else if (i === hechas) cls += ' active';
-=======
-    // Anillo SVG
-    const progreso = this._restantes / this._duracionActual;
-    const offset   = this._circunf * (1 - progreso);
-    this.$ring.style.strokeDashoffset = offset;
-
-    // Color del anillo según tiempo restante
-    if (progreso < 0.25)      this.$ring.style.stroke = '#E53935';
-    else if (progreso < 0.5)  this.$ring.style.stroke = '#FB8C00';
-    else                      this.$ring.style.stroke = '#7B1FA2';
-  }
-
-  // ── Puntos de sesión ──────────────────────────────────────────────────────
-
-  _renderSessions() {
-    const dots = [];
-    for (let i = 0; i < this._sesionTotal; i++) {
-      let cls = 'session-dot';
-      if (i < this._sesionAct)       cls += ' done';
-      else if (i === this._sesionAct) cls += ' active';
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
       dots.push(`<div class="${cls}"></div>`);
     }
     this.$sessions.innerHTML = dots.join('');
   }
 
-<<<<<<< HEAD
   // ── Panel de estadísticas: Pomodoros hoy | Esta tarea | Tiempo total ──────
 
   _renderStats(tarea) {
@@ -262,18 +157,11 @@ class PomodoroView {
     const actual = this._contadorHoy();
     localStorage.setItem('tm_pomodoros_hoy', JSON.stringify({ fecha: hoyStr, count: actual + 1 }));
   }
-=======
-  // ── Notificación del navegador ────────────────────────────────────────────
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
 
   _notificar(titulo, cuerpo) {
     if (!('Notification' in window)) return;
     if (Notification.permission === 'granted') {
-<<<<<<< HEAD
       new Notification(titulo, { body: cuerpo });
-=======
-      new Notification(titulo, { body: cuerpo, icon: '🍅' });
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
     } else if (Notification.permission !== 'denied') {
       Notification.requestPermission().then(p => {
         if (p === 'granted') new Notification(titulo, { body: cuerpo });
@@ -281,20 +169,13 @@ class PomodoroView {
     }
   }
 
-<<<<<<< HEAD
   /** Cierra la pantalla de enfoque */
-=======
-  /** Detener timer al cerrar el modal */
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
   detener() {
     clearInterval(this._intervalo);
     this._corriendo = false;
     this.$btnToggle.textContent = '▶';
     this.$btnToggle.classList.remove('running');
-<<<<<<< HEAD
     this.$overlay.classList.remove('open');
     this._tareaId = null;
-=======
->>>>>>> 3172dd1abb413cac36de18701f41dcc462326b50
   }
 }
