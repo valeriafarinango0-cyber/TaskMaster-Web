@@ -41,6 +41,15 @@ class HomeView {
   }
 
   // ── Chips de filtro (estado + categorías propias) ─────────────────────────
+<<<<<<< HEAD
+=======
+
+  static DESCRIPCIONES = {
+    todas:       { icono: '📋', texto: 'Todas tus tareas juntas, sin importar su estado. Útil para tener una vista general de todo lo que tienes registrado.' },
+    pendientes:  { icono: '⏳', texto: 'Las tareas que todavía no has completado. Aquí es donde enfocas tu energía: qué sigue, qué se acerca y qué ya se atrasó.' },
+    completadas: { icono: '✅', texto: 'Tu historial de tareas terminadas. Sirve para ver tu progreso real y recordar todo lo que ya lograste.' },
+  };
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 
   renderFiltros() {
     const activo = this._vm.getFiltroActivo();
@@ -54,27 +63,177 @@ class HomeView {
 
     this.$filterRow.innerHTML = '';
 
+<<<<<<< HEAD
     estados.forEach(e => {
+=======
+    const crearWrap = (key, label, color) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'chip-wrap';
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'chip-dropdown';
+      wrap.appendChild(dropdown);
+
+      wrap.addEventListener('mouseenter', () => this._poblarDropdown(dropdown, key, label));
+
+      return wrap;
+    };
+
+    estados.forEach(e => {
+      const wrap = crearWrap(e.key, e.label);
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
       const btn = document.createElement('button');
       btn.className = `chip ${activo === e.key ? 'chip--active' : ''}`;
       btn.dataset.filter = e.key;
       btn.textContent = e.label;
+<<<<<<< HEAD
       this.$filterRow.appendChild(btn);
     });
 
     categorias.forEach(c => {
+=======
+      wrap.prepend(btn);
+      this.$filterRow.appendChild(wrap);
+    });
+
+    categorias.forEach(c => {
+      const wrap = crearWrap(c.id, c.nombre, c.color);
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
       const btn = document.createElement('button');
       btn.className = `chip ${String(activo) === String(c.id) ? 'chip--active' : ''}`;
       btn.dataset.filter = c.id;
       btn.style.borderColor = c.color;
       if (String(activo) === String(c.id)) btn.style.color = c.color;
       btn.innerHTML = `<span class="chip-dot" style="background:${c.color}"></span>${c.icono || ''} ${c.nombre}`;
+<<<<<<< HEAD
       this.$filterRow.appendChild(btn);
     });
 
     this.$filterRow.querySelectorAll('.chip').forEach(chip => {
       chip.addEventListener('click', () => this._vm.setFiltro(chip.dataset.filter));
+=======
+      wrap.prepend(btn);
+      this.$filterRow.appendChild(wrap);
     });
+
+    this.$filterRow.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        this._vm.setFiltro(chip.dataset.filter);
+        this.abrirDetalleCategoria(chip.dataset.filter);
+      });
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
+    });
+  }
+
+  _poblarDropdown(dropdown, key, label) {
+    if (dropdown.dataset.listo) return;
+    dropdown.dataset.listo = '1';
+
+    const tareas = this._vm.getTareasPorFiltro(key);
+    if (!tareas.length) {
+      dropdown.innerHTML = `<p class="chip-dropdown__vacio">No tienes tareas en "${label}"</p>`;
+      return;
+    }
+    dropdown.innerHTML = `<ul class="chip-dropdown__lista">${
+      tareas.slice(0, 8).map(t => `<li>${t.titulo}</li>`).join('')
+    }${tareas.length > 8 ? `<li class="chip-dropdown__mas">+${tareas.length - 8} más</li>` : ''}</ul>`;
+  }
+
+  // ── Panel de detalle al hacer click en un filtro/categoría ─────────────────
+
+  abrirDetalleCategoria(key) {
+    const $overlay = document.getElementById('modal-categoria-overlay');
+    const $badge   = document.getElementById('categoria-detalle-badge');
+    const $titulo  = document.getElementById('categoria-detalle-titulo');
+    const $desc    = document.getElementById('categoria-detalle-desc');
+    const $chart   = document.getElementById('categoria-detalle-chart');
+    const $lista   = document.getElementById('categoria-detalle-lista');
+    if (!$overlay) return;
+
+    const categoria = HomeView.DESCRIPCIONES[key];
+    let titulo, descripcion, icono, color;
+
+    if (categoria) {
+      titulo = key === 'todas' ? 'Todas' : key === 'pendientes' ? 'Pendientes' : 'Completadas';
+      descripcion = categoria.texto;
+      icono = categoria.icono;
+      color = 'var(--accent-start)';
+    } else {
+      const cat = this._vm.getCategoriaById(key) || { nombre: 'Categoría', color: 'var(--accent-start)', icono: '📁' };
+      titulo = cat.nombre;
+      descripcion = `Agrupa aquí las tareas relacionadas con "${cat.nombre}". Te sirve para filtrar rápido y ver solo lo que corresponde a esta área de tu vida, sin mezclarlo con lo demás.`;
+      icono = cat.icono || '📁';
+      color = cat.color;
+    }
+
+    $badge.textContent = icono;
+    $badge.style.background = color;
+    $titulo.textContent = titulo;
+    $desc.textContent = descripcion;
+
+    const tareas = this._vm.getTareasPorFiltro(key);
+    $chart.innerHTML = this._renderMiniChart(tareas);
+    $lista.innerHTML = this._renderListaCategoria(tareas);
+
+    $overlay.classList.add('open');
+  }
+
+  cerrarDetalleCategoria() {
+    const $overlay = document.getElementById('modal-categoria-overlay');
+    if ($overlay) $overlay.classList.remove('open');
+  }
+
+  _renderMiniChart(tareas) {
+    const pendientes = tareas.filter(t => !t.completada);
+    if (!pendientes.length) {
+      return `<p class="mini-chart__vacio">No hay tiempo pendiente que mostrar aquí.</p>`;
+    }
+
+    const ahora = new Date();
+    let vencidas = 0, hoy = 0, semana = 0, luego = 0;
+    pendientes.forEach(t => {
+      if (!t.fecha_limite) { luego++; return; }
+      const dias = (new Date(t.fecha_limite) - ahora) / 86_400_000;
+      if (dias < 0) vencidas++;
+      else if (dias < 1) hoy++;
+      else if (dias < 7) semana++;
+      else luego++;
+    });
+
+    const total = pendientes.length;
+    const barras = [
+      { label: 'Vencidas',  valor: vencidas, color: 'var(--urgente)' },
+      { label: 'Hoy',       valor: hoy,      color: 'var(--medio)' },
+      { label: 'Esta semana', valor: semana, color: 'var(--accent-start)' },
+      { label: 'Más adelante', valor: luego, color: 'var(--ok)' },
+    ].filter(b => b.valor > 0);
+
+    return `<div class="mini-chart">${
+      barras.map(b => `
+        <div class="mini-chart__fila">
+          <span class="mini-chart__label">${b.label}</span>
+          <div class="mini-chart__pista"><div class="mini-chart__barra" style="width:${(b.valor / total) * 100}%; background:${b.color}"></div></div>
+          <span class="mini-chart__valor">${b.valor}</span>
+        </div>`).join('')
+    }</div>`;
+  }
+
+  _renderListaCategoria(tareas) {
+    const pendientes = tareas.filter(t => !t.completada);
+    if (!pendientes.length) {
+      return `<p class="categoria-detalle-lista__vacio">No hay tareas pendientes aquí. 🎉</p>`;
+    }
+    return `<ul class="categoria-detalle-lista__items">${
+      pendientes.map(t => {
+        const { texto, clase } = this._etiquetaFecha(t.fecha_limite);
+        return `<li><span>${t.titulo}</span><span class="vence-badge ${clase}">${texto}</span></li>`;
+      }).join('')
+    }</ul>`;
+  }
+
+  _etiquetaFecha(fecha) {
+    if (typeof taskModel !== 'undefined' && taskModel.etiquetaFecha) return taskModel.etiquetaFecha(fecha);
+    return { texto: '', clase: '' };
   }
 
   // ── Lista de tareas ───────────────────────────────────────────────────────

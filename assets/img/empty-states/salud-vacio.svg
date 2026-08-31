@@ -1,0 +1,27 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="salud-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00C876;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#00A651;stop-opacity:0.05" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="300" fill="url(#salud-bg)"/>
+
+  <!-- Heart illustration -->
+  <g transform="translate(150, 100)">
+    <path d="M0 35C-25 15 -35 5 -35 -5C-35 -18 -26 -28 -15 -28C-7 -28 0 -20 0 -20C0 -20 7 -28 15 -28C26 -28 35 -18 35 -5C35 5 25 15 0 35Z"
+          fill="#00C876" opacity="0.15" stroke="#00C876" stroke-width="2"/>
+
+    <!-- Pulse lines -->
+    <path d="M-25 0Q-15 -8 -5 0" stroke="#00C876" stroke-width="1.5" fill="none" opacity="0.3"/>
+    <path d="M5 0Q15 -8 25 0" stroke="#00C876" stroke-width="1.5" fill="none" opacity="0.3"/>
+  </g>
+
+  <!-- Text -->
+  <text x="150" y="220" font-family="Roboto, sans-serif" font-size="18" font-weight="600"
+        text-anchor="middle" fill="#00C876">Sin tareas de salud</text>
+  <text x="150" y="250" font-family="Roboto, sans-serif" font-size="14"
+        text-anchor="middle" fill="#999">Cuida tu bienestar y salud</text>
+</svg>

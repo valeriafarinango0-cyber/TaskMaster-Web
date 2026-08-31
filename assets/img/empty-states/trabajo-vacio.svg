@@ -1,0 +1,36 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="trabajo-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7C4DFF;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#5E35B1;stop-opacity:0.05" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="300" fill="url(#trabajo-bg)"/>
+
+  <!-- Briefcase illustration -->
+  <g transform="translate(150, 100)">
+    <!-- Briefcase body -->
+    <path d="M-40 0C-40 -8 -32 -15 -24 -15H24C32 -15 40 -8 40 0V50C40 58 32 65 24 65H-24C-32 65 -40 58 -40 50V0Z"
+          fill="#7C4DFF" opacity="0.1" stroke="#7C4DFF" stroke-width="2"/>
+
+    <!-- Handles -->
+    <rect x="-30" y="-20" width="8" height="12" rx="4" fill="#7C4DFF" opacity="0.08" stroke="#7C4DFF" stroke-width="1.5"/>
+    <rect x="22" y="-20" width="8" height="12" rx="4" fill="#7C4DFF" opacity="0.08" stroke="#7C4DFF" stroke-width="1.5"/>
+
+    <!-- Divider -->
+    <line x1="-40" y1="15" x2="40" y2="15" stroke="#7C4DFF" stroke-width="1.5" opacity="0.3"/>
+
+    <!-- Details -->
+    <circle cx="-15" cy="30" r="3" fill="#7C4DFF" opacity="0.4"/>
+    <circle cx="0" cy="30" r="3" fill="#7C4DFF" opacity="0.4"/>
+    <circle cx="15" cy="30" r="3" fill="#7C4DFF" opacity="0.4"/>
+  </g>
+
+  <!-- Text -->
+  <text x="150" y="220" font-family="Roboto, sans-serif" font-size="18" font-weight="600"
+        text-anchor="middle" fill="#7C4DFF">Sin tareas de trabajo</text>
+  <text x="150" y="250" font-family="Roboto, sans-serif" font-size="14"
+        text-anchor="middle" fill="#999">Crea una nueva tarea para comenzar</text>
+</svg>

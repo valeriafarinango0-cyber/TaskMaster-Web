@@ -10,3 +10,7 @@ $estados = [
 
 echo json_encode(["success" => true, "estados" => $estados]);
 ?>
+<<<<<<< HEAD
+=======
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1

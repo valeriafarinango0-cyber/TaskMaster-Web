@@ -1,0 +1,41 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="estudio-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BCD4;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#0097A7;stop-opacity:0.05" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="300" fill="url(#estudio-bg)"/>
+
+  <!-- Book illustration -->
+  <g transform="translate(150, 100)">
+    <!-- Left page -->
+    <path d="M-45 -25C-48 -25 -50 -23 -50 -20L-50 35C-50 38 -48 40 -45 40L-5 40C-8 40 -10 38 -10 35L-10 -20C-10 -23 -8 -25 -5 -25L-45 -25Z"
+          fill="#00BCD4" opacity="0.1" stroke="#00BCD4" stroke-width="2"/>
+
+    <!-- Right page -->
+    <path d="M5 -25C8 -25 10 -23 10 -20L10 35C10 38 8 40 5 40L45 40C48 40 50 38 50 35L50 -20C50 -23 48 -25 45 -25L5 -25Z"
+          fill="#00BCD4" opacity="0.1" stroke="#00BCD4" stroke-width="2"/>
+
+    <!-- Spine -->
+    <line x1="-5" y1="-25" x2="-5" y2="40" stroke="#00BCD4" stroke-width="1.5" opacity="0.3"/>
+    <line x1="5" y1="-25" x2="5" y2="40" stroke="#00BCD4" stroke-width="1.5" opacity="0.3"/>
+
+    <!-- Text lines -->
+    <line x1="-40" y1="-10" x2="-15" y2="-10" stroke="#00BCD4" stroke-width="1" opacity="0.2"/>
+    <line x1="-40" y1="0" x2="-15" y2="0" stroke="#00BCD4" stroke-width="1" opacity="0.2"/>
+    <line x1="-40" y1="10" x2="-25" y2="10" stroke="#00BCD4" stroke-width="1" opacity="0.2"/>
+
+    <line x1="15" y1="-10" x2="40" y2="-10" stroke="#00BCD4" stroke-width="1" opacity="0.2"/>
+    <line x1="15" y1="0" x2="40" y2="0" stroke="#00BCD4" stroke-width="1" opacity="0.2"/>
+    <line x1="15" y1="10" x2="35" y2="10" stroke="#00BCD4" stroke-width="1" opacity="0.2"/>
+  </g>
+
+  <!-- Text -->
+  <text x="150" y="220" font-family="Roboto, sans-serif" font-size="18" font-weight="600"
+        text-anchor="middle" fill="#00BCD4">Sin tareas de estudio</text>
+  <text x="150" y="250" font-family="Roboto, sans-serif" font-size="14"
+        text-anchor="middle" fill="#999">Organiza tus actividades de aprendizaje</text>
+</svg>

@@ -440,6 +440,24 @@
   </div>
 
   <!-- ═══════════ PANTALLA 5 — DETALLE DE TAREA ═══════════ -->
+  <!-- Modal Detalle de Categoría/Filtro -->
+  <div class="modal-overlay" id="modal-categoria-overlay">
+    <div class="modal modal--categoria" id="modal-categoria">
+      <div class="modal__header">
+        <div>
+          <span class="categoria-detalle-badge" id="categoria-detalle-badge"></span>
+          <h2 class="modal__title" id="categoria-detalle-titulo"></h2>
+        </div>
+        <button class="modal__close" id="btn-cerrar-categoria-detalle">✕</button>
+      </div>
+      <div class="categoria-detalle-body">
+        <p class="categoria-detalle-desc" id="categoria-detalle-desc"></p>
+        <div class="categoria-detalle-chart" id="categoria-detalle-chart"></div>
+        <div class="categoria-detalle-lista" id="categoria-detalle-lista"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-detalle-overlay">
     <div class="modal modal--detalle" id="modal-detalle">
       <div class="modal__header" id="detalle-header">
@@ -617,6 +635,10 @@
 
       <div class="modal__actions">
         <button type="button" class="btn btn--danger" id="btn-perfil-logout">Cerrar sesión</button>
+      </div>
+
+      <div class="perfil-zona-peligro">
+        <button type="button" class="btn-link-danger" id="btn-perfil-eliminar-cuenta">Eliminar mi cuenta</button>
       </div>
     </div>
   </div>

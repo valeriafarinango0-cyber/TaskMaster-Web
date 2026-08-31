@@ -93,21 +93,43 @@ class AuthView {
       return;
     }
 
+<<<<<<< HEAD
     const payload = { nombre, email, password };
     const url = this.mode === 'login' ? 'api/login.php' : 'api/registro.php';
     try {
       const res = await fetch(url, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const data = await res.json();
+=======
+    const payload = { nombre, email, password, action: this.mode };
+    try {
+      const res = await fetch(`api/auth?action=${this.mode}`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        this.app.showToast('El servidor no respondió correctamente. Verifica que esté corriendo.', 'error');
+        return;
+      }
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
       if (data.success) {
         const user = { id: data.user_id || (data.user && data.user.id) || null, nombre: nombre || (data.user && data.user.nombre) || email, email };
         localStorage.setItem('tm_user', JSON.stringify(user));
         await this._onAuthSuccess(user, this.mode === 'login' ? 'Bienvenido' : 'Cuenta creada');
+<<<<<<< HEAD
+=======
+      } else if (res.status === 401) {
+        this.app.showToast(this.mode === 'login' ? 'Correo o contraseña incorrectos' : (data.error || 'Error'), 'error');
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
       } else {
         this.app.showToast(data.error || data.message || 'Error', 'error');
       }
     } catch (e) {
       console.error(e);
+<<<<<<< HEAD
       this.app.showToast('Error de red', 'error');
+=======
+      this.app.showToast('No se pudo conectar con el servidor. Verifica tu conexión.', 'error');
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
     }
   }
 
@@ -136,5 +158,8 @@ class AuthView {
     this.app.showToast('Sesión cerrada', 'info');
   }
 }
+<<<<<<< HEAD
 
 // export not necessary; App will instantiate AuthView
+=======
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1

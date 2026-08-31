@@ -427,6 +427,28 @@ img {
 
 .perfil-nivel .nivel-card { margin-top: 0; }
 
+<<<<<<< HEAD
+=======
+.perfil-zona-peligro {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.btn-link-danger {
+  background: none;
+  border: none;
+  color: #F5576C;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.btn-link-danger:hover { opacity: 0.8; }
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .stat-card {
   padding: 18px;
   border-radius: var(--radius-lg);
@@ -544,6 +566,68 @@ img {
   padding: 4px 0 16px;
 }
 
+<<<<<<< HEAD
+=======
+.chip-wrap {
+  position: relative;
+  display: flex;
+}
+
+.chip-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  max-width: 280px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-soft);
+  z-index: 30;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+.chip-wrap:hover .chip-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.chip-dropdown__vacio {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chip-dropdown__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.chip-dropdown__lista li {
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.chip-dropdown__lista li:last-child { border-bottom: none; padding-bottom: 0; }
+
+.chip-dropdown__mas {
+  color: var(--muted);
+  font-style: italic;
+}
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .chip {
   display: flex;
   align-items: center;
@@ -824,6 +908,18 @@ img {
 .vence--pronto { color: var(--medio); }
 .vence--normal { color: var(--muted); }
 
+<<<<<<< HEAD
+=======
+.vence-badge {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+}
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .materia-pill {
   display: inline-flex;
   align-items: center;
@@ -1415,6 +1511,102 @@ img {
   line-height: 1.7;
 }
 
+<<<<<<< HEAD
+=======
+.categoria-detalle-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: #07171b;
+}
+
+.categoria-detalle-body {
+  display: grid;
+  gap: 18px;
+}
+
+.categoria-detalle-desc {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.categoria-detalle-chart {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+}
+
+.mini-chart { display: grid; gap: 10px; }
+
+.mini-chart__fila {
+  display: grid;
+  grid-template-columns: 90px 1fr 24px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.mini-chart__label { color: var(--muted); }
+
+.mini-chart__pista {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+.mini-chart__barra {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.mini-chart__valor { text-align: right; font-weight: 700; }
+
+.mini-chart__vacio {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.categoria-detalle-lista__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.categoria-detalle-lista__items li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  font-size: 13px;
+}
+
+.categoria-detalle-lista__vacio {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .detalle-meta-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1722,12 +1914,23 @@ img {
   font-size: 30px;
   cursor: pointer;
   box-shadow: 0 24px 48px rgba(0, 201, 255, 0.2);
+<<<<<<< HEAD
   display: grid;
+=======
+  display: none;
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
   place-items: center;
   z-index: 20;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+<<<<<<< HEAD
+=======
+.fab.fab--visible {
+  display: grid;
+}
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .fab:hover {
   transform: scale(1.08) rotate(90deg);
   box-shadow: 0 24px 48px rgba(0, 201, 255, 0.38);

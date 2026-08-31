@@ -149,3 +149,7 @@ else {
 
 $conexion->close();
 ?>
+<<<<<<< HEAD
+=======
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1

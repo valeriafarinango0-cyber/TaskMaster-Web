@@ -71,7 +71,11 @@ class App {
     if (taskSec)    taskSec.style.display    = activo ? 'none' : '';
     if (headerSum)  headerSum.style.display  = activo ? 'none' : '';
     if (btnHero)    btnHero.textContent      = activo ? '🚀 Comenzar gratis' : '+ Nueva tarea';
+<<<<<<< HEAD
     if (btnFab)     btnFab.style.display     = activo ? 'none' : '';
+=======
+    if (btnFab)     btnFab.classList.toggle('fab--visible', !activo);
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 
     if (activo && nivelCard) {
       nivelCard.innerHTML = `
@@ -261,6 +265,14 @@ class App {
       }
     });
 
+<<<<<<< HEAD
+=======
+    const btnCerrarCategoria = document.getElementById('btn-cerrar-categoria-detalle');
+    if (btnCerrarCategoria) btnCerrarCategoria.addEventListener('click', () => this.homeView.cerrarDetalleCategoria());
+    const categoriaOverlay = document.getElementById('modal-categoria-overlay');
+    if (categoriaOverlay) categoriaOverlay.addEventListener('click', e => { if (e.target === categoriaOverlay) this.homeView.cerrarDetalleCategoria(); });
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
     const btnCerrarPerfil = document.getElementById('btn-cerrar-perfil');
     if (btnCerrarPerfil) btnCerrarPerfil.addEventListener('click', () => this._cerrarPerfil());
     const perfilOverlay = document.getElementById('modal-perfil-overlay');
@@ -273,6 +285,12 @@ class App {
       }
     });
 
+<<<<<<< HEAD
+=======
+    const btnEliminarCuenta = document.getElementById('btn-perfil-eliminar-cuenta');
+    if (btnEliminarCuenta) btnEliminarCuenta.addEventListener('click', () => this._eliminarCuenta());
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
     const btnPrev = document.getElementById('btn-semana-prev');
     if (btnPrev) btnPrev.addEventListener('click', () => taskViewModel.moverSemana(-1));
     const btnNext = document.getElementById('btn-semana-next');
@@ -284,6 +302,10 @@ class App {
         this.modalView.cerrarDetalle();
         this.pomodoroView.detener();
         this._cerrarPerfil();
+<<<<<<< HEAD
+=======
+        this.homeView.cerrarDetalleCategoria();
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
       }
     });
   }
@@ -337,6 +359,35 @@ class App {
     document.getElementById('modal-perfil-overlay').classList.remove('open');
   }
 
+<<<<<<< HEAD
+=======
+  async _eliminarCuenta() {
+    if (!this.user) return;
+    if (!confirm('Esto va a borrar tu cuenta y todas tus tareas de forma permanente. ¿Continuar?')) return;
+
+    const password = prompt('Escribe tu contraseña para confirmar:');
+    if (!password) return;
+
+    try {
+      const res = await fetch('api/auth', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario_id: this.user.id, password }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        this.showToast(data.error || 'No se pudo eliminar la cuenta.', 'error');
+        return;
+      }
+      this._cerrarPerfil();
+      this.showToast('Cuenta eliminada.', 'success');
+      this.authView.logout();
+    } catch (e) {
+      this.showToast('No se pudo conectar con el servidor.', 'error');
+    }
+  }
+
+>>>>>>> claude/imagenes-iconos-categorias-qdq8s1
   // ── Notificaciones del navegador (HU-04, sin cuenta requerida) ─────────────
 
   _solicitarPermisoNotificaciones() {

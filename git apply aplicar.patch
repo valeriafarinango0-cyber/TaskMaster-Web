@@ -1,0 +1,4 @@
+git apply aplicar.patch
+git add .
+git commit -m "Tanda 1: Category accordions, PWA, Light theme, Session gating"
+git push -u origin claude/taskmaster-web-access-s6frsf
