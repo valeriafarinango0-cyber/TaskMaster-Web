@@ -1,0 +1,214 @@
+{
+  "info": {
+    "name": "TaskMaster Web API",
+    "description": "Colección Postman de la API REST de TaskMaster Web (backend PHP en api/, consumido por el frontend MVVM). Requiere cookie de sesión PHP: ejecutar primero Login o Registro con 'Send cookies' activado.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:800/TaskMaster-Web/api" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Registro",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Eduardo Hurtado\",\n  \"email\": \"eduardo@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/registro.php", "host": ["{{base_url}}"], "path": ["registro.php"] }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"eduardo@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/login.php", "host": ["{{base_url}}"], "path": ["login.php"] }
+          }
+        },
+        {
+          "name": "Login con Google",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Eduardo Hurtado\",\n  \"email\": \"eduardo@gmail.com\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/google-auth.php", "host": ["{{base_url}}"], "path": ["google-auth.php"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuario (sesión activa)",
+      "item": [
+        {
+          "name": "Ver mi perfil",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/usuarios.php", "host": ["{{base_url}}"], "path": ["usuarios.php"] }
+          }
+        },
+        {
+          "name": "Actualizar mi perfil",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Nuevo nombre\"\n}" },
+            "url": { "raw": "{{base_url}}/usuarios.php", "host": ["{{base_url}}"], "path": ["usuarios.php"] }
+          }
+        },
+        {
+          "name": "Eliminar mi cuenta",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"password\": \"password123\"\n}" },
+            "url": { "raw": "{{base_url}}/usuarios.php", "host": ["{{base_url}}"], "path": ["usuarios.php"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tareas",
+      "item": [
+        {
+          "name": "Listar tareas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/tareas.php", "host": ["{{base_url}}"], "path": ["tareas.php"] }
+          }
+        },
+        {
+          "name": "Crear tarea",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Entregar informe\",\n  \"descripcion\": \"Informe final del proyecto\",\n  \"categoria_id\": 1,\n  \"prioridad\": \"Alta\",\n  \"fecha_limite\": \"2026-09-10 18:00:00\",\n  \"pomodoros_est\": 3,\n  \"min_anticipacion\": 30\n}"
+            },
+            "url": { "raw": "{{base_url}}/tareas.php", "host": ["{{base_url}}"], "path": ["tareas.php"] }
+          }
+        },
+        {
+          "name": "Actualizar tarea",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": 1,\n  \"completada\": 1\n}" },
+            "url": { "raw": "{{base_url}}/tareas.php", "host": ["{{base_url}}"], "path": ["tareas.php"] }
+          }
+        },
+        {
+          "name": "Eliminar tarea",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": 1\n}" },
+            "url": { "raw": "{{base_url}}/tareas.php", "host": ["{{base_url}}"], "path": ["tareas.php"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categorías",
+      "item": [
+        {
+          "name": "Listar categorías",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/categorias.php", "host": ["{{base_url}}"], "path": ["categorias.php"] }
+          }
+        },
+        {
+          "name": "Crear categoría",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Estudio\",\n  \"color\": \"#00C9FF\",\n  \"icono\": \"📚\"\n}" },
+            "url": { "raw": "{{base_url}}/categorias.php", "host": ["{{base_url}}"], "path": ["categorias.php"] }
+          }
+        },
+        {
+          "name": "Actualizar categoría",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": 1,\n  \"color\": \"#F5576C\"\n}" },
+            "url": { "raw": "{{base_url}}/categorias.php", "host": ["{{base_url}}"], "path": ["categorias.php"] }
+          }
+        },
+        {
+          "name": "Eliminar categoría",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": 1\n}" },
+            "url": { "raw": "{{base_url}}/categorias.php", "host": ["{{base_url}}"], "path": ["categorias.php"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catálogos",
+      "item": [
+        {
+          "name": "Estados",
+          "request": { "method": "GET", "url": { "raw": "{{base_url}}/estados.php", "host": ["{{base_url}}"], "path": ["estados.php"] } }
+        },
+        {
+          "name": "Prioridades",
+          "request": { "method": "GET", "url": { "raw": "{{base_url}}/prioridades.php", "host": ["{{base_url}}"], "path": ["prioridades.php"] } }
+        }
+      ]
+    },
+    {
+      "name": "Estadísticas semanales",
+      "item": [
+        {
+          "name": "Tareas por rango de fechas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/stats.php?desde=2026-09-01&hasta=2026-09-07",
+              "host": ["{{base_url}}"],
+              "path": ["stats.php"],
+              "query": [
+                { "key": "desde", "value": "2026-09-01" },
+                { "key": "hasta", "value": "2026-09-07" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notificaciones",
+      "item": [
+        {
+          "name": "Enviar notificación por correo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prioridad\": \"Alta\",\n  \"asunto\": \"Tarea próxima a vencer\",\n  \"mensaje\": \"Tu tarea vence en 1 hora.\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/notify.php", "host": ["{{base_url}}"], "path": ["notify.php"] }
+          }
+        }
+      ]
+    }
+  ]
+}
