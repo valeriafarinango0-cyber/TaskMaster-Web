@@ -12,15 +12,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 include_once(__DIR__ . '/../config/conexion.php');
 
-$input = json_decode(file_get_contents('php://input'), true) ?? [];
-$email = trim($input['email'] ?? '');
-$nombre = trim($input['nombre'] ?? '');
+// Client ID de la app en Google Cloud Console (no es secreto: viaja también
+// en el frontend). Configurable por entorno; el valor por defecto es el que
+// ya usa integraciones/.env para este mismo proyecto.
+$googleClientId = getenv('GOOGLE_CLIENT_ID') ?: '1047323212016-hanf3ml2lg14ltd61j7naso03p3o53qj.apps.googleusercontent.com';
 
-if ($email === '' || $nombre === '') {
+$input = json_decode(file_get_contents('php://input'), true) ?? [];
+$credential = trim($input['credential'] ?? '');
+
+if ($credential === '') {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Datos de Google insuficientes."]);
+    echo json_encode(["success" => false, "message" => "Falta el token de Google."]);
     exit;
 }
+
+// Verifica el ID token con el endpoint tokeninfo de Google en vez de confiar
+// en datos que mande el navegador. No se usa una librería JWT local porque
+// el proyecto no tiene un gestor de dependencias PHP (Composer/vendor).
+$verifyUrl = 'https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($credential);
+$respuesta = @file_get_contents($verifyUrl);
+$payload   = $respuesta ? json_decode($respuesta, true) : null;
+
+if (!$payload || !isset($payload['aud']) || $payload['aud'] !== $googleClientId) {
+    http_response_code(401);
+    echo json_encode(["success" => false, "message" => "Token de Google inválido."]);
+    exit;
+}
+if (($payload['email_verified'] ?? 'false') !== 'true' || empty($payload['email'])) {
+    http_response_code(401);
+    echo json_encode(["success" => false, "message" => "El correo de Google no está verificado."]);
+    exit;
+}
+if (isset($payload['exp']) && intval($payload['exp']) < time()) {
+    http_response_code(401);
+    echo json_encode(["success" => false, "message" => "El token de Google expiró, intenta de nuevo."]);
+    exit;
+}
+
+$email  = trim($payload['email']);
+$nombre = trim($payload['name'] ?? explode('@', $email)[0]);
 
 $conexion->query("CREATE TABLE IF NOT EXISTS usuarios (
     id INT NOT NULL AUTO_INCREMENT,

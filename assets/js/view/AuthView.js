@@ -22,6 +22,10 @@ class AuthView {
     this.mode = 'login'; // 'login' | 'register' | 'forgot' | 'reset'
     this._resetToken = null;
 
+    // Client ID de Google Cloud Console (no es secreto, viaja en el frontend).
+    this.GOOGLE_CLIENT_ID = '1047323212016-hanf3ml2lg14ltd61j7naso03p3o53qj.apps.googleusercontent.com';
+    this._googleInitialized = false;
+
     this._bind();
   }
 
@@ -76,36 +80,54 @@ class AuthView {
     this.$btnSwitch.textContent = mode === 'login' ? 'Cambiar a Registrar' : 'Cambiar a Iniciar sesión';
   }
 
-  /** Simula login con proveedor (Google). En producción usar OAuth. */
+  /** Login real con Google Identity Services (One Tap / botón). */
   async loginWithProvider(provider) {
-    if (provider === 'google') {
-      const promptEmail = prompt('Inicia sesión con Google - introduce tu email (simulado)');
-      if (!promptEmail) {
+    if (provider !== 'google') {
+      this.openMode('login');
+      return;
+    }
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+      this.app.showToast('No se pudo cargar el inicio de sesión de Google. Revisa tu conexión e intenta de nuevo.', 'error');
+      return;
+    }
+
+    if (!this._googleInitialized) {
+      google.accounts.id.initialize({
+        client_id: this.GOOGLE_CLIENT_ID,
+        callback: (response) => this._handleGoogleCredential(response),
+      });
+      this._googleInitialized = true;
+    }
+
+    google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed && notification.isNotDisplayed()) {
+        this.app.showToast('Google no mostró el diálogo de inicio de sesión (revisa cookies de terceros).', 'error');
+      } else if (notification.isSkippedMoment && notification.isSkippedMoment()) {
         this.app.showToast('Inicio con Google cancelado', 'info');
+      }
+    });
+  }
+
+  /** Callback de Google Identity Services: llega con un ID token firmado. */
+  async _handleGoogleCredential(response) {
+    try {
+      const res = await fetch('api/google-auth.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: response.credential })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        const user = { id: data.user.id, nombre: data.user.nombre, email: data.user.email };
+        localStorage.setItem('tm_user', JSON.stringify(user));
+        await this._onAuthSuccess(user, 'Conectado con Google');
         return;
       }
-      const nombre = promptEmail.split('@')[0];
-      try {
-        const res = await fetch('api/google-auth.php', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: promptEmail, nombre })
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-          const user = { id: data.user.id, nombre: data.user.nombre, email: promptEmail };
-          localStorage.setItem('tm_user', JSON.stringify(user));
-          await this._onAuthSuccess(user, 'Conectado con Google');
-          return;
-        }
-        this.app.showToast(data.message || data.error || 'Error Google', 'error');
-      } catch (e) {
-        console.error(e);
-        this.app.showToast('Error de red Google', 'error');
-      }
-    } else {
-      this.openMode('login');
+      this.app.showToast(data.message || data.error || 'Error de autenticación con Google', 'error');
+    } catch (e) {
+      console.error(e);
+      this.app.showToast('Error de red al conectar con Google', 'error');
     }
   }
 
