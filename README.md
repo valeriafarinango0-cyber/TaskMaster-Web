@@ -260,7 +260,7 @@ npm start               # http://localhost:3000
 
 ## Hosting y dominio
 
-Actualmente el proyecto corre en local (XAMPP). Aún no está desplegado en un hosting con dominio propio — pendiente de elegir proveedor con soporte PHP+MySQL (o migrar el backend a un servicio como Railway/Render) y registrar el dominio.
+El proyecto está desplegado en **Hostinger** con dominio propio: **[taskmaster-app.com](https://taskmaster-app.com/)**. El sitio se sirve correctamente (frontend, assets, PWA), pero las funcionalidades que dependen del backend PHP en producción — por ejemplo, los botones de login/registro — actualmente **no responden** y están pendientes de corrección (revisar conexión a MySQL, variables de entorno DB_* en hPanel y permisos del hosting). Para probar el flujo completo con backend funcional, usar el entorno local (XAMPP) descrito arriba.
 
 ---
 
