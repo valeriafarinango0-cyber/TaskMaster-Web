@@ -82,23 +82,53 @@ TaskMaster-Web/
 ├── index.html                    # SPA principal — todas las vistas
 ├── server.js                     # Backend alternativo Node.js + Express
 ├── package.json                  # Dependencias npm (backend alternativo)
-├── .env.example                  # Plantilla de variables de entorno
+├── manifest.json                 # Configuración PWA (instalable)
+├── sw.js                         # Service Worker — cache del app shell / modo offline
+├── serviceAccountKey.json        # Credencial Firebase Admin (NO se sube a Git)
+├── .env.example                  # Plantilla de variables de entorno (server.js)
 ├── .gitignore                    # Excluye .env, node_modules, credenciales
 │
-├── api/                          # Backend principal (PHP)
+├── api/                          # Backend principal (PHP) — lo que consume el frontend
 │   ├── tareas.php                # CRUD tareas (GET/POST/PUT/DELETE)
 │   ├── categorias.php            # CRUD categorías propias del usuario
+│   ├── usuarios.php               # Wrapper → controllers/UsuariosController.php
 │   ├── login.php                 # Autenticación local
 │   ├── registro.php              # Registro de usuarios
 │   ├── google-auth.php           # Autenticación con Google
-│   ├── notify.php                # Notificaciones/recordatorios
+│   ├── notify.php                # Notificaciones/recordatorios (correo de la sesión)
+│   ├── estados.php               # Catálogo fijo de estados de tarea
+│   ├── prioridades.php           # Catálogo fijo de prioridades
 │   └── stats.php                 # Datos agregados para la vista semanal
 │
+├── controllers/                  # Controladores PHP estilo MVC
+│   ├── UsuariosController.php    # En uso real (vía api/usuarios.php)
+│   ├── TareasController.php      # No enrutado — api/tareas.php implementa su propia lógica
+│   └── CategoriasController.php  # No enrutado — api/categorias.php implementa su propia lógica
+│
+├── models/                       # Modelos PHP (mysqli) que usan los controllers/
+│   ├── usuarios.php
+│   ├── Tarea.php
+│   └── Categoria.php
+│
 ├── config/
-│   └── conexion.php               # Conexión mysqli a MySQL
+│   └── conexion.php               # Conexión mysqli (lee DB_HOST/DB_USER/DB_PASSWORD/DB_NAME del entorno)
+│
+├── lib/
+│   └── firestore.js               # Instancia Firebase Admin Firestore (usada por server.js)
 │
 ├── database/
 │   └── taskmaster_db.sql          # Script SQL (usuarios, categorías, tareas, alertas)
+│
+├── docs/
+│   ├── Manual.pdf                 # Manuales de usuario, administrador y desarrollador
+│   ├── API.POSTMAN.json           # Colección Postman de la API REST
+│   ├── DER.png                    # Diagrama entidad-relación de la base de datos
+│   └── CATEGORY_ICONS.md          # Referencia de íconos por categoría
+│
+├── integraciones/                 # Servidor Node.js secundario (puerto aparte)
+│   ├── server.js
+│   ├── routes/                    # OAuth Google/Microsoft, Calendar, Drive, Classroom, Teams, OneDrive, email, ICS
+│   └── lib/                       # tokenStore, Brevo (email), Firestore, OAuth helpers
 │
 └── assets/
     ├── css/
@@ -153,11 +183,20 @@ usuarios (1) ──────────── (N) tareas
 | PUT | `/api/tareas.php` | Actualiza campos de una tarea |
 | DELETE | `/api/tareas.php` | Elimina una tarea y sus alertas |
 | GET/POST/PUT/DELETE | `/api/categorias.php` | CRUD de categorías propias (nombre, color, ícono) |
+| GET/POST/PUT/DELETE | `/api/usuarios.php` | Perfil del usuario en sesión: ver/editar/eliminar cuenta (requiere contraseña para eliminar) |
 | POST | `/api/login.php` | Login local, valida contraseña con `password_verify()` |
 | POST | `/api/registro.php` | Registro, guarda contraseña con `password_hash()` |
 | POST | `/api/google-auth.php` | Autenticación con Google |
-| POST | `/api/notify.php` | Envía/registra un recordatorio |
+| POST | `/api/notify.php` | Envía un recordatorio al correo del usuario en sesión |
+| GET | `/api/estados.php` | Catálogo de estados de tarea |
+| GET | `/api/prioridades.php` | Catálogo de prioridades |
 | GET | `/api/stats.php` | Datos agregados para la vista semanal |
+
+> Colección completa lista para importar en Postman: [`docs/API.POSTMAN.json`](docs/API.POSTMAN.json).
+
+### Servidor de integraciones (`integraciones/`, puerto aparte)
+
+Corre por separado (`cd integraciones && npm start`) y expone OAuth 2.0 con Google/Microsoft y las rutas de Calendar, Drive, Classroom, Teams, OneDrive, envío de email (Brevo) y generación de archivos `.ics`. Ver el Manual de Desarrollador (`docs/Manual.pdf`) para el detalle de cada ruta.
 
 ---
 
