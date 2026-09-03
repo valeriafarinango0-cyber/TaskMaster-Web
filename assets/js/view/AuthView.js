@@ -11,8 +11,16 @@ class AuthView {
     this.$modeLabel = document.getElementById('auth-mode-label');
     this.$title = document.getElementById('auth-title');
     this.$submit = document.getElementById('btn-auth-submit');
+    this.$emailRow = document.getElementById('auth-email-row');
+    this.$passwordRow = document.getElementById('auth-password-row');
+    this.$passwordLabel = document.getElementById('auth-password-label');
+    this.$passwordConfirmRow = document.getElementById('auth-password-confirm-row');
+    this.$passwordConfirm = document.getElementById('auth-password-confirm');
+    this.$forgotRow = document.getElementById('auth-forgot-row');
+    this.$btnForgot = document.getElementById('btn-forgot-password');
 
-    this.mode = 'login'; // or 'register'
+    this.mode = 'login'; // 'login' | 'register' | 'forgot' | 'reset'
+    this._resetToken = null;
 
     this._bind();
   }
@@ -24,6 +32,7 @@ class AuthView {
     this.$form.addEventListener('submit', e => { e.preventDefault(); this._submit(); });
     const btnGoogleModal = document.getElementById('btn-modal-google');
     if (btnGoogleModal) btnGoogleModal.addEventListener('click', () => this.loginWithProvider('google'));
+    if (this.$btnForgot) this.$btnForgot.addEventListener('click', () => this._setMode('forgot'));
   }
 
   open() {
@@ -31,12 +40,40 @@ class AuthView {
   }
 
   openMode(mode = 'login') {
-    this.mode = mode;
-    this.$modeLabel.textContent = this.mode === 'login' ? 'Cuenta' : 'Registro';
-    this.$title.textContent = this.mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta';
-    this.$btnSwitch.textContent = this.mode === 'login' ? 'Cambiar a Registrar' : 'Cambiar a Iniciar sesión';
-    this.$nombre.style.display = this.mode === 'login' ? 'none' : 'block';
+    this._setMode(mode);
     this.open();
+  }
+
+  /** Abre el modal directamente en modo "nueva contraseña" con el token del enlace del correo. */
+  openReset(token) {
+    this._resetToken = token;
+    this._setMode('reset');
+    this.open();
+  }
+
+  _setMode(mode) {
+    this.mode = mode;
+    const labels = {
+      login:    { modeLabel: 'Cuenta',   title: 'Iniciar sesión',        submit: 'Continuar' },
+      register: { modeLabel: 'Registro', title: 'Crear cuenta',          submit: 'Continuar' },
+      forgot:   { modeLabel: 'Cuenta',   title: 'Recuperar contraseña',  submit: 'Enviar enlace' },
+      reset:    { modeLabel: 'Cuenta',   title: 'Nueva contraseña',      submit: 'Guardar contraseña' },
+    }[mode];
+
+    this.$modeLabel.textContent = labels.modeLabel;
+    this.$title.textContent = labels.title;
+    this.$submit.textContent = labels.submit;
+
+    this.$nombre.style.display = mode === 'register' ? 'block' : 'none';
+    this.$emailRow.style.display = mode === 'reset' ? 'none' : 'block';
+    this.$passwordRow.style.display = mode === 'forgot' ? 'none' : 'block';
+    this.$passwordConfirmRow.style.display = mode === 'reset' ? 'block' : 'none';
+    this.$passwordLabel.textContent = mode === 'reset' ? 'Nueva contraseña' : 'Contraseña';
+    this.$forgotRow.style.display = mode === 'login' ? 'block' : 'none';
+
+    const showSwitch = mode === 'login' || mode === 'register';
+    this.$btnSwitch.style.display = showSwitch ? 'inline-block' : 'none';
+    this.$btnSwitch.textContent = mode === 'login' ? 'Cambiar a Registrar' : 'Cambiar a Iniciar sesión';
   }
 
   /** Simula login con proveedor (Google). En producción usar OAuth. */
@@ -77,14 +114,13 @@ class AuthView {
   }
 
   _toggleMode() {
-    this.mode = this.mode === 'login' ? 'register' : 'login';
-    this.$modeLabel.textContent = this.mode === 'login' ? 'Cuenta' : 'Registro';
-    this.$title.textContent = this.mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta';
-    this.$btnSwitch.textContent = this.mode === 'login' ? 'Cambiar a Registrar' : 'Cambiar a Iniciar sesión';
-    this.$nombre.style.display = this.mode === 'login' ? 'none' : 'block';
+    this._setMode(this.mode === 'login' ? 'register' : 'login');
   }
 
   async _submit() {
+    if (this.mode === 'forgot') return this._submitForgot();
+    if (this.mode === 'reset') return this._submitReset();
+
     const nombre = this.$nombre.value.trim();
     const email = this.$email.value.trim();
     const password = this.$password.value;
@@ -116,6 +152,62 @@ class AuthView {
     } catch (e) {
       console.error(e);
       this.app.showToast('No se pudo conectar con el servidor. Verifica tu conexión.', 'error');
+    }
+  }
+
+  /** Modo 'forgot': pide el correo y solicita el enlace de recuperación. */
+  async _submitForgot() {
+    const email = this.$email.value.trim();
+    if (!email) {
+      this.app.showToast('Ingresa tu correo', 'error');
+      return;
+    }
+    try {
+      const res = await fetch('api/reset-password.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request', email })
+      });
+      const data = await res.json();
+      this.app.showToast(data.message || 'Si el correo existe, te enviamos un enlace.', 'success');
+      this._setMode('login');
+    } catch (e) {
+      console.error(e);
+      this.app.showToast('No se pudo conectar con el servidor.', 'error');
+    }
+  }
+
+  /** Modo 'reset': define la nueva contraseña usando el token del enlace del correo. */
+  async _submitReset() {
+    const password = this.$password.value;
+    const confirm = this.$passwordConfirm.value;
+    if (!password || password.length < 8) {
+      this.app.showToast('La contraseña debe tener al menos 8 caracteres', 'error');
+      return;
+    }
+    if (password !== confirm) {
+      this.app.showToast('Las contraseñas no coinciden', 'error');
+      return;
+    }
+    try {
+      const res = await fetch('api/reset-password.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reset', token: this._resetToken, password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        this.app.showToast(data.message || 'Contraseña actualizada', 'success');
+        this._resetToken = null;
+        this._setMode('login');
+      } else {
+        this.app.showToast(data.error || 'No se pudo actualizar la contraseña', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      this.app.showToast('No se pudo conectar con el servidor.', 'error');
     }
   }
 

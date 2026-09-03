@@ -1333,6 +1333,25 @@ img {
   min-width: 160px;
 }
 
+.auth-forgot {
+  margin: -8px 0 12px;
+  text-align: right;
+}
+
+.link-inline {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent-start, #00C9FF);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-inline:hover {
+  opacity: 0.8;
+}
+
 .categoria-picker {
   display: flex;
   align-items: center;

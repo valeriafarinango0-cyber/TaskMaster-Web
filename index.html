@@ -550,18 +550,27 @@
             <input type="text" id="auth-nombre" placeholder="Tu nombre (para registro)" />
           </label>
         </div>
-        <div class="form-row">
+        <div class="form-row" id="auth-email-row">
           <label class="field">
             <span>Email</span>
             <input type="email" id="auth-email" placeholder="email@ejemplo.com" required />
           </label>
         </div>
-        <div class="form-row">
+        <div class="form-row" id="auth-password-row">
           <label class="field">
-            <span>Contraseña</span>
+            <span id="auth-password-label">Contraseña</span>
             <input type="password" id="auth-password" placeholder="Contraseña" required />
           </label>
         </div>
+        <div class="form-row" id="auth-password-confirm-row" style="display:none">
+          <label class="field">
+            <span>Confirmar contraseña</span>
+            <input type="password" id="auth-password-confirm" placeholder="Repite la contraseña" />
+          </label>
+        </div>
+        <p class="auth-forgot" id="auth-forgot-row">
+          <button type="button" class="link-inline" id="btn-forgot-password">¿Olvidaste tu contraseña?</button>
+        </p>
         <div class="modal__actions modal__actions--split">
           <button type="button" class="btn btn--ghost" id="btn-switch-auth">Cambiar a Registrar</button>
           <button type="submit" class="btn btn--primary" id="btn-auth-submit">Continuar</button>

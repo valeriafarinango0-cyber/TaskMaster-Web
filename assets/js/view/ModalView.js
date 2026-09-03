@@ -96,6 +96,24 @@ class ModalView {
       this.$pomodoroCount.textContent = this.$pomodoros.value;
     });
 
+    // Detección de fecha/prioridad a partir del título (ej. "Reunión mañana urgente").
+    // Solo aplica al crear una tarea nueva y solo rellena campos que el usuario
+    // todavía no tocó, para no pisar una elección explícita.
+    this.$titulo.addEventListener('input', () => {
+      if (this.$id.value) return; // no autocompletar al editar una tarea existente
+      const detectado = this._detectarDesdeTitulo(this.$titulo.value);
+
+      if (detectado.fecha && !this.$fecha.value) {
+        const f = new Date(detectado.fecha);
+        f.setMinutes(f.getMinutes() - f.getTimezoneOffset());
+        this.$fecha.value = f.toISOString().slice(0, 16);
+      }
+      if (detectado.prioridad && this.$prioridadInput.value === 'Media') {
+        this.$prioridadInput.value = detectado.prioridad;
+        this.$priorityBtns.forEach(b => b.classList.toggle('active', b.dataset.priority === detectado.prioridad));
+      }
+    });
+
     this.$recCheck.addEventListener('change', () => {
       this.$recOpts.style.display = this.$recCheck.checked ? 'block' : 'none';
     });
@@ -214,6 +232,35 @@ class ModalView {
         })
       });
     } catch (e) { /* silencioso: la notificacion nativa del navegador es la principal via HU-04 */ }
+  }
+
+  // ── Detección simple de fecha/prioridad en el texto del título ─────────────
+  // Heurística por palabras clave (sin dependencias externas). Cubre los casos
+  // documentados en el Manual de Usuario: "hoy/mañana/pasado mañana" para la
+  // fecha y "urgente/importante" (Alta) o "sin prisa" (Baja) para la prioridad.
+  _detectarDesdeTitulo(texto) {
+    const t = (texto || '').toLowerCase();
+    let fecha = null;
+
+    if (/\bpasado\s*mañana\b/.test(t)) {
+      fecha = new Date();
+      fecha.setDate(fecha.getDate() + 2);
+    } else if (/\bmañana\b/.test(t)) {
+      fecha = new Date();
+      fecha.setDate(fecha.getDate() + 1);
+    } else if (/\bhoy\b/.test(t)) {
+      fecha = new Date();
+    }
+    if (fecha) fecha.setHours(18, 0, 0, 0); // hora límite por defecto: fin de la jornada
+
+    let prioridad = null;
+    if (/\burgente\b|\bimportante\b|\basap\b/.test(t)) {
+      prioridad = 'Alta';
+    } else if (/sin prisa|cuando pueda|baja prioridad/.test(t)) {
+      prioridad = 'Baja';
+    }
+
+    return { fecha, prioridad };
   }
 
   // ── Validación del formulario ─────────────────────────────────────────────

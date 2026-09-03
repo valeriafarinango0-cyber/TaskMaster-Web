@@ -30,6 +30,14 @@ class App {
   // en lugar de la lista de tareas (mostrarModoInvitado).
 
   async _iniciar() {
+    const resetToken = new URLSearchParams(location.search).get('reset');
+    if (resetToken) {
+      this.mostrarModoInvitado();
+      this.authView.openReset(resetToken);
+      history.replaceState({}, '', location.pathname);
+      return;
+    }
+
     const haySesion = this.authView._restoreUser();
     if (haySesion) {
       await this._cargarPanel();
