@@ -49,6 +49,19 @@ $SELECT_BASE = "SELECT t.*, c.nombre AS categoria_nombre, c.color AS categoria_c
                 FROM tareas t
                 LEFT JOIN categorias c ON t.categoria_id = c.id";
 
+// Evita que un usuario (o un invitado) modifique/elimine tareas que no le pertenecen.
+function tareaEsDelUsuario($conexion, $id, $userId) {
+    $stmt = $conexion->prepare("SELECT usuario_id FROM tareas WHERE id = ?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $fila = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    if (!$fila) return false;
+    return $userId !== null
+        ? (int) $fila['usuario_id'] === $userId
+        : $fila['usuario_id'] === null;
+}
+
 // ── GET: obtener tareas del usuario (o de invitado) ─────────────────────────
 if ($metodo === 'GET') {
     if ($userId) {
@@ -125,6 +138,11 @@ elseif ($metodo === 'PUT') {
         echo json_encode(["success" => false, "error" => "ID requerido."]);
         exit;
     }
+    if (!tareaEsDelUsuario($conexion, $id, $userId)) {
+        http_response_code(404);
+        echo json_encode(["success" => false, "error" => "Tarea no encontrada."]);
+        exit;
+    }
 
     $permitidos = ['titulo','descripcion','categoria_id','prioridad',
                    'fecha_limite','pomodoros_est','pomodoros_real',
@@ -171,6 +189,11 @@ elseif ($metodo === 'DELETE') {
 
     if (!$id) {
         echo json_encode(["success" => false, "error" => "ID requerido."]);
+        exit;
+    }
+    if (!tareaEsDelUsuario($conexion, $id, $userId)) {
+        http_response_code(404);
+        echo json_encode(["success" => false, "error" => "Tarea no encontrada."]);
         exit;
     }
 

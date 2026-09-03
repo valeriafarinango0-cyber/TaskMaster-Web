@@ -2,11 +2,7 @@ node_modules/
 .env
 .env.*
 !.env.example
-<<<<<<< HEAD
-*.firebase-adminsdk*.json
-=======
 *firebase-adminsdk*.json
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 *-adminsdk-*.json
 .vscode/
 notify.log

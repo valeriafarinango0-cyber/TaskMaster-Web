@@ -427,8 +427,6 @@ img {
 
 .perfil-nivel .nivel-card { margin-top: 0; }
 
-<<<<<<< HEAD
-=======
 .perfil-zona-peligro {
   margin-top: 14px;
   padding-top: 14px;
@@ -448,7 +446,6 @@ img {
 
 .btn-link-danger:hover { opacity: 0.8; }
 
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .stat-card {
   padding: 18px;
   border-radius: var(--radius-lg);
@@ -566,8 +563,6 @@ img {
   padding: 4px 0 16px;
 }
 
-<<<<<<< HEAD
-=======
 .chip-wrap {
   position: relative;
   display: flex;
@@ -627,7 +622,6 @@ img {
   font-style: italic;
 }
 
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .chip {
   display: flex;
   align-items: center;
@@ -908,8 +902,6 @@ img {
 .vence--pronto { color: var(--medio); }
 .vence--normal { color: var(--muted); }
 
-<<<<<<< HEAD
-=======
 .vence-badge {
   font-size: 11px;
   font-weight: 700;
@@ -919,7 +911,6 @@ img {
   background: rgba(255,255,255,0.06);
 }
 
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .materia-pill {
   display: inline-flex;
   align-items: center;
@@ -1511,8 +1502,6 @@ img {
   line-height: 1.7;
 }
 
-<<<<<<< HEAD
-=======
 .categoria-detalle-badge {
   display: inline-flex;
   align-items: center;
@@ -1606,7 +1595,6 @@ img {
   text-align: center;
 }
 
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .detalle-meta-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1914,23 +1902,16 @@ img {
   font-size: 30px;
   cursor: pointer;
   box-shadow: 0 24px 48px rgba(0, 201, 255, 0.2);
-<<<<<<< HEAD
-  display: grid;
-=======
   display: none;
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
   place-items: center;
   z-index: 20;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-<<<<<<< HEAD
-=======
 .fab.fab--visible {
   display: grid;
 }
 
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 .fab:hover {
   transform: scale(1.08) rotate(90deg);
   box-shadow: 0 24px 48px rgba(0, 201, 255, 0.38);

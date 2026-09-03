@@ -41,17 +41,6 @@ class TaskViewModel {
   getCategoriaById(id) { return this._state.categorias.find(c => c.id === Number(id)) || null; }
 
   getTareasFiltradas() {
-<<<<<<< HEAD
-    const { tareas, filtroActivo } = this._state;
-    if (filtroActivo === 'todas') return tareas;
-    if (filtroActivo === 'pendientes') return tareas.filter(t => !t.completada);
-    if (filtroActivo === 'completadas') return tareas.filter(t => t.completada);
-    return tareas.filter(t => String(t.categoria_id) === String(filtroActivo));
-  }
-
-  // ── Carga de datos ─────────────────────────────────────────────────────────
-
-=======
     return this.getTareasPorFiltro(this._state.filtroActivo);
   }
 
@@ -65,7 +54,6 @@ class TaskViewModel {
 
   // ── Carga de datos ─────────────────────────────────────────────────────────
 
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
   async cargarTodo() {
     this._state.cargando = true;
     this._notify('loading');

@@ -37,6 +37,19 @@ if ($colIco && $colIco->num_rows === 0) {
 $userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null;
 $metodo = $_SERVER['REQUEST_METHOD'];
 
+// Evita que un usuario edite/elimine categorías de otro usuario.
+function categoriaEsDelUsuario($conexion, $id, $userId) {
+    $stmt = $conexion->prepare("SELECT usuario_id FROM categorias WHERE id = ?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $fila = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    if (!$fila) return false;
+    return $userId !== null
+        ? (int) $fila['usuario_id'] === $userId
+        : $fila['usuario_id'] === null;
+}
+
 // ── GET: listar categorias ────────────────────────────────────────────────
 if ($metodo === 'GET') {
     if ($userId) {
@@ -97,6 +110,11 @@ elseif ($metodo === 'PUT') {
         echo json_encode(["success" => false, "error" => "ID requerido."]);
         exit;
     }
+    if (!categoriaEsDelUsuario($conexion, $id, $userId)) {
+        http_response_code(404);
+        echo json_encode(["success" => false, "error" => "Categoría no encontrada."]);
+        exit;
+    }
 
     $campos  = [];
     $tipos   = '';
@@ -130,6 +148,11 @@ elseif ($metodo === 'DELETE') {
         echo json_encode(["success" => false, "error" => "ID requerido."]);
         exit;
     }
+    if (!categoriaEsDelUsuario($conexion, $id, $userId)) {
+        http_response_code(404);
+        echo json_encode(["success" => false, "error" => "Categoría no encontrada."]);
+        exit;
+    }
 
     // Las tareas de esta categoria quedan sin categoria (no se eliminan)
     $stmtU = $conexion->prepare("UPDATE tareas SET categoria_id = NULL WHERE categoria_id = ?");
@@ -149,7 +172,3 @@ else {
 
 $conexion->close();
 ?>
-<<<<<<< HEAD
-=======
-
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1

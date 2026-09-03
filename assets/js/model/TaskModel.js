@@ -16,21 +16,8 @@
 class TaskModel {
 
     constructor() {
-<<<<<<< HEAD
         this.API_TAREAS = 'api/tareas.php';
-=======
-        this.API_TAREAS = 'api/tareas';
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
         this._tareas = [];
-    }
-
-    _usuarioId() {
-        try {
-            const u = JSON.parse(localStorage.getItem('tm_user') || 'null');
-            return u && u.id != null ? u.id : null;
-        } catch (e) {
-            return null;
-        }
     }
 
     // ── Fallback localStorage ─────────────────────────────────────────────────
@@ -102,13 +89,7 @@ class TaskModel {
     // ── GET: todas las tareas ─────────────────────────────────────────────────
     async getAll() {
         try {
-<<<<<<< HEAD
             const res  = await fetch(this.API_TAREAS, { credentials: 'include' });
-=======
-            const usuarioId = this._usuarioId();
-            const url = usuarioId != null ? `${this.API_TAREAS}?usuario_id=${usuarioId}` : this.API_TAREAS;
-            const res  = await fetch(url, { credentials: 'include' });
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
             const data = await res.json();
             if (res.ok && data.success) {
                 this._tareas = data.tareas;
@@ -135,11 +116,7 @@ class TaskModel {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-<<<<<<< HEAD
                 body: JSON.stringify(tarea)
-=======
-                body: JSON.stringify({ ...tarea, usuario_id: this._usuarioId() })
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
             });
             const data = await res.json();
             if (res.ok && data.success) {

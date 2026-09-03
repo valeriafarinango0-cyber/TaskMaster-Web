@@ -41,15 +41,12 @@ class HomeView {
   }
 
   // ── Chips de filtro (estado + categorías propias) ─────────────────────────
-<<<<<<< HEAD
-=======
 
   static DESCRIPCIONES = {
     todas:       { icono: '📋', texto: 'Todas tus tareas juntas, sin importar su estado. Útil para tener una vista general de todo lo que tienes registrado.' },
     pendientes:  { icono: '⏳', texto: 'Las tareas que todavía no has completado. Aquí es donde enfocas tu energía: qué sigue, qué se acerca y qué ya se atrasó.' },
     completadas: { icono: '✅', texto: 'Tu historial de tareas terminadas. Sirve para ver tu progreso real y recordar todo lo que ya lograste.' },
   };
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
 
   renderFiltros() {
     const activo = this._vm.getFiltroActivo();
@@ -63,9 +60,6 @@ class HomeView {
 
     this.$filterRow.innerHTML = '';
 
-<<<<<<< HEAD
-    estados.forEach(e => {
-=======
     const crearWrap = (key, label, color) => {
       const wrap = document.createElement('div');
       wrap.className = 'chip-wrap';
@@ -81,37 +75,22 @@ class HomeView {
 
     estados.forEach(e => {
       const wrap = crearWrap(e.key, e.label);
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
       const btn = document.createElement('button');
       btn.className = `chip ${activo === e.key ? 'chip--active' : ''}`;
       btn.dataset.filter = e.key;
       btn.textContent = e.label;
-<<<<<<< HEAD
-      this.$filterRow.appendChild(btn);
-    });
-
-    categorias.forEach(c => {
-=======
       wrap.prepend(btn);
       this.$filterRow.appendChild(wrap);
     });
 
     categorias.forEach(c => {
       const wrap = crearWrap(c.id, c.nombre, c.color);
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
       const btn = document.createElement('button');
       btn.className = `chip ${String(activo) === String(c.id) ? 'chip--active' : ''}`;
       btn.dataset.filter = c.id;
       btn.style.borderColor = c.color;
       if (String(activo) === String(c.id)) btn.style.color = c.color;
       btn.innerHTML = `<span class="chip-dot" style="background:${c.color}"></span>${c.icono || ''} ${c.nombre}`;
-<<<<<<< HEAD
-      this.$filterRow.appendChild(btn);
-    });
-
-    this.$filterRow.querySelectorAll('.chip').forEach(chip => {
-      chip.addEventListener('click', () => this._vm.setFiltro(chip.dataset.filter));
-=======
       wrap.prepend(btn);
       this.$filterRow.appendChild(wrap);
     });
@@ -121,7 +100,6 @@ class HomeView {
         this._vm.setFiltro(chip.dataset.filter);
         this.abrirDetalleCategoria(chip.dataset.filter);
       });
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
     });
   }
 

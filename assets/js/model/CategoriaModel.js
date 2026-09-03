@@ -7,26 +7,10 @@
 class CategoriaModel {
 
     constructor() {
-<<<<<<< HEAD
         this.API_CATEGORIAS = 'api/categorias.php';
         this._categorias = [];
     }
 
-=======
-        this.API_CATEGORIAS = 'api/categorias';
-        this._categorias = [];
-    }
-
-    _usuarioId() {
-        try {
-            const u = JSON.parse(localStorage.getItem('tm_user') || 'null');
-            return u && u.id != null ? u.id : null;
-        } catch (e) {
-            return null;
-        }
-    }
-
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
     // ── Fallback localStorage ─────────────────────────────────────────────────
     _lsGet() {
         const guardadas = JSON.parse(localStorage.getItem('tm_categorias') || 'null');
@@ -50,13 +34,7 @@ class CategoriaModel {
     // ── GET: todas las categorías ─────────────────────────────────────────────
     async getAll() {
         try {
-<<<<<<< HEAD
             const res  = await fetch(this.API_CATEGORIAS, { credentials: 'include' });
-=======
-            const usuarioId = this._usuarioId();
-            const url = usuarioId != null ? `${this.API_CATEGORIAS}?usuario_id=${usuarioId}` : this.API_CATEGORIAS;
-            const res  = await fetch(url, { credentials: 'include' });
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
             const data = await res.json();
             if (res.ok && data.success && data.categorias.length) {
                 this._categorias = data.categorias;
@@ -80,11 +58,7 @@ class CategoriaModel {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-<<<<<<< HEAD
                 body: JSON.stringify({ nombre, color, icono })
-=======
-                body: JSON.stringify({ nombre, color, icono, usuario_id: this._usuarioId() })
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
             });
             const data = await res.json();
             if (res.ok && data.success) {

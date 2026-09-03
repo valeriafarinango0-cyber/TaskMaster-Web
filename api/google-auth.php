@@ -59,7 +59,3 @@ $_SESSION['user_id'] = $user['id'];
 echo json_encode(["success" => true, "user" => ["id" => $user['id'], "nombre" => $user['nombre'], "email" => $email]]);
 $conexion->close();
 ?>
-<<<<<<< HEAD
-=======
-
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1

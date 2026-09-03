@@ -10,7 +10,3 @@ $prioridades = [
 
 echo json_encode(["success"=>true, "prioridades"=>$prioridades]);
 ?>
-<<<<<<< HEAD
-=======
-
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1

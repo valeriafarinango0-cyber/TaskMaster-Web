@@ -205,6 +205,7 @@ class ModalView {
     try {
       await fetch('api/notify.php', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prioridad: datos.prioridad,

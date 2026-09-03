@@ -12,7 +12,3 @@ if ($conexion->connect_error) {
 }
 
 ?>
-<<<<<<< HEAD
-=======
-
->>>>>>> claude/imagenes-iconos-categorias-qdq8s1
