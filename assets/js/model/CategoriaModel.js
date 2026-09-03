@@ -17,12 +17,12 @@ class CategoriaModel {
         if (guardadas) return guardadas;
         // Semilla inicial universal (no académica) para que la app no arranque vacía
         return [
-            { id: 1, nombre: 'Trabajo',   color: '#00C9FF', icono: '💼' },
-            { id: 2, nombre: 'Personal',  color: '#92FE9D', icono: '🌿' },
-            { id: 3, nombre: 'Hogar',     color: '#F093FB', icono: '🏠' },
+            { id: 1, nombre: 'Estudio',   color: '#F093FB', icono: '📚' },
+            { id: 2, nombre: 'Trabajo',   color: '#00C9FF', icono: '💼' },
+            { id: 3, nombre: 'Personal',  color: '#92FE9D', icono: '🌿' },
             { id: 4, nombre: 'Salud',     color: '#F5576C', icono: '❤' },
             { id: 5, nombre: 'Finanzas',  color: '#FFC107', icono: '💰' },
-            { id: 6, nombre: 'Proyectos', color: '#7C4DFF', icono: '🚀' },
+            { id: 6, nombre: 'General',   color: '#7C4DFF', icono: '📌' },
         ];
     }
     _lsSave(categorias) { localStorage.setItem('tm_categorias', JSON.stringify(categorias)); }

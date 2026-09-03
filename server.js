@@ -168,10 +168,10 @@ app.post('/api/tareas', async (req, res) => {
   }
 });
 
-app.put('/api/tareas', async (req, res) => {
+app.put('/api/tareas/:id', async (req, res) => {
   try {
     const data = req.body;
-    const id = Number(data.id || 0);
+    const id = Number(req.params.id || 0);
     if (!id) return res.status(400).json({ success: false, error: 'ID requerido.' });
 
     const allowed = ['titulo', 'descripcion', 'materia_id', 'prioridad', 'fecha_limite', 'general_categoria', 'pomodoros_est', 'pomodoros_real', 'completada', 'min_anticipacion'];
@@ -196,9 +196,9 @@ app.put('/api/tareas', async (req, res) => {
   }
 });
 
-app.delete('/api/tareas', async (req, res) => {
+app.delete('/api/tareas/:id', async (req, res) => {
   try {
-    const id = Number(req.body.id || 0);
+    const id = Number(req.params.id || 0);
     if (!id) return res.status(400).json({ success: false, error: 'ID requerido.' });
 
     await db.collection('tareas').doc(String(id)).delete();
@@ -233,7 +233,7 @@ app.post('/api/auth', async (req, res) => {
       const id = await siguienteId('usuarios');
       const usuario = { id, nombre: nombre.trim(), email: emailNorm, password_hash: hash, fecha_creacion: new Date().toISOString() };
       await db.collection('usuarios').doc(String(id)).set(usuario);
-      return res.json({ success: true, user_id: id });
+      return res.json({ success: true, user: { id, nombre: usuario.nombre, email: usuario.email } });
     }
 
     if (action === 'login') {

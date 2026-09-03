@@ -67,18 +67,19 @@ CREATE TABLE IF NOT EXISTS alertas (
 -- =====================================================
 
 INSERT INTO categorias (nombre, color, icono) VALUES
+  ('Estudio',   '#F093FB', '📚'),
   ('Trabajo',   '#00C9FF', '💼'),
   ('Personal',  '#92FE9D', '🌿'),
-  ('Hogar',     '#F093FB', '🏠'),
   ('Salud',     '#F5576C', '❤'),
   ('Finanzas',  '#FFC107', '💰'),
-  ('Proyectos', '#7C4DFF', '🚀');
+  ('General',   '#7C4DFF', '📌');
 
 -- Tareas de ejemplo
+-- categoria_id: 1=Estudio, 2=Trabajo, 3=Personal, 4=Salud, 5=Finanzas, 6=General
 INSERT INTO tareas (titulo, descripcion, categoria_id, prioridad, fecha_limite, pomodoros_est) VALUES
-  ('Entregar propuesta de proyecto', 'Documento con objetivos y cronograma', 1, 'Alta',
+  ('Entregar propuesta de proyecto', 'Documento con objetivos y cronograma', 2, 'Alta',
    DATE_ADD(NOW(), INTERVAL 1 DAY), 3),
-  ('Pagar servicios del hogar', 'Luz, agua e internet', 3, 'Media',
+  ('Pagar servicios del hogar', 'Luz, agua e internet', 6, 'Media',
    DATE_ADD(NOW(), INTERVAL 3 DAY), 1),
   ('Rutina de ejercicio', 'Sesion de 45 minutos', 4, 'Baja',
    DATE_ADD(NOW(), INTERVAL 2 DAY), 1);
